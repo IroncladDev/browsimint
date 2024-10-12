@@ -20,8 +20,14 @@
             "src/scripts/background.ts"
         ]
     },
-  "permissions": ["storage", "activeTab", "windows"],
-  "optional_permissions": ["notifications"],
+    "permissions": [
+        "storage",
+        "activeTab",
+        "windows"
+    ],
+    "optional_permissions": [
+        "notifications"
+    ],
     "content_scripts": [
         {
             "run_at": "document_end",

@@ -38,8 +38,4 @@ export default defineConfig({
     format: "es",
     plugins: () => [wasm(), topLevelAwait()],
   },
-
-  optimizeDeps: {
-    exclude: ["@fedimint/core-web"],
-  },
 });

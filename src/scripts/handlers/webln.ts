@@ -1,8 +1,6 @@
 import {
-  MakeInvoiceParams,
   WeblnProviderMethods,
 } from "../../providers/webln/types";
-import { fedimint } from "../background";
 
 export default async function handleWeblnMessage<
   T extends keyof WeblnProviderMethods
@@ -12,27 +10,14 @@ export default async function handleWeblnMessage<
 ): Promise<WeblnProviderMethods[T][1]> {
   switch (method) {
     case "makeInvoice":
-      const input: MakeInvoiceParams = params as any;
-
-      const amount =
-        typeof input === "number"
-          ? input
-          : typeof input === "string"
-          ? parseInt(input)
-          : input.amount;
-
       return {
-        paymentRequest: (
-          await fedimint.lightning.createInvoice(
-            Number(amount),
-            typeof input === "object" ? input.defaultMemo ?? "" : ""
-          )
-        ).invoice,
+        // TODO: placeholder
+        paymentRequest: "lnbc100",
       };
     case "sendPayment":
       return {
-        preimage: (await fedimint.lightning.payInvoice(params as string))
-          .contract_id,
+        // TODO: placeholder
+        preimage: "asdf",
       };
     case "enable":
     default:

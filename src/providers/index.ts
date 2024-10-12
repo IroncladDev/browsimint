@@ -23,6 +23,7 @@ export interface WindowMessage {
   module: ModuleType;
   method: string;
   params: any;
+  window: [number, number];
 }
 
 declare global {

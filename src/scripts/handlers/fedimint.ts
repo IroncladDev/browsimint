@@ -1,5 +1,4 @@
 import { FedimintProviderMethods } from "../../providers/fedimint/types";
-import { fedimint } from "../background";
 
 export default async function handleFedimintMessage<
   T extends keyof FedimintProviderMethods
@@ -10,7 +9,7 @@ export default async function handleFedimintMessage<
   switch (method) {
     case "generateEcash":
       return {
-        notes: (await fedimint.mint.spendNotes((params as any).amount)).notes,
+        notes: "",
       };
     case "getAuthenticatedMember":
       return {
@@ -18,12 +17,9 @@ export default async function handleFedimintMessage<
         username: "unknown",
       };
     case "getActiveFederation":
-      const config = (await fedimint.federation.getConfig()) as any;
-
       return {
-        id: await fedimint.federation.getFederationId(),
-        name: config.meta.federation_name,
-        // TODO: change
+        id: "412d2a9338ebeee5957382eb06eac07fa5235087b5a7d5d0a6e18c635394e9ed",
+        name: "Fedi Internal",
         network: "bitcoin",
       };
     case "getCurrencyCode":
@@ -32,6 +28,6 @@ export default async function handleFedimintMessage<
       return "en";
     case "receiveEcash":
     default:
-      return await fedimint.mint.redeemEcash((params as string));
+      return;
   }
 }

@@ -8,7 +8,7 @@ export default class FedimintProvider {
   // 1 = Signature permission needed
   // 2 = Payment permission needed
   static permissions: Record<keyof FedimintProviderMethods, 0 | 1 | 2> = {
-    generateEcash: 1,
+    generateEcash: 2,
     receiveEcash: 1,
     getAuthenticatedMember: 0,
     getActiveFederation: 0,

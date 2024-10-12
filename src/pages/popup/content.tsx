@@ -1,6 +1,7 @@
 import { styled } from "react-tailwind-variants";
 
 export default function Popup() {
+
   return (
     <Container>
       <Icon src="/icon-with-shadow.svg" />

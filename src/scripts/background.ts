@@ -11,50 +11,12 @@ import handleWeblnMessage from "./handlers/webln";
 import { FedimintProviderMethods } from "../providers/fedimint/types";
 import { NostrProviderMethods } from "../providers/nostr/types";
 import { WeblnProviderMethods } from "../providers/webln/types";
-import { FedimintWallet } from "@fedimint/core-web";
 
 let openPrompt: any = null;
 let promptMutex = new Mutex();
 let releasePromptMutex = () => {};
-const width = 340;
-const height = 360;
-
-let fedimint = new FedimintWallet();
-
-(async () => {
-  const isOpen = await fedimint.open("testnet");
-
-  if (!isOpen) {
-    await fedimint.joinFederation(
-      "fed11qgqrgvnhwden5te0v9k8q6rp9ekh2arfdeukuet595cr2ttpd3jhq6rzve6zuer9wchxvetyd938gcewvdhk6tcqqysptkuvknc7erjgf4em3zfh90kffqf9srujn6q53d6r056e4apze5cw27h75",
-      "testnet"
-    );
-  }
-
-  // TODO: clear storage and remove
-  // if (
-  //   (await browser.storage.local.get("activeFederationId"))
-  //     .activeFederationId !== "testnet"
-  // ) {
-  //   browser.storage.local.set({
-  //     activeFederationId: "testnet",
-  //     federationIds: JSON.stringify(["testnet"]),
-  //   });
-  // }
-})();
-
-// Update the wallet when the storage changes
-// browser.storage.onChanged.addListener(async (changes, namespace) => {
-//   if (namespace === "local") {
-//     for (let [key, { newValue }] of Object.entries(changes)) {
-//       if (key === "activeFederationId") {
-//         await fedimint.cleanup();
-//         fedimint = new FedimintWallet();
-//         await fedimint.open(newValue);
-//       }
-//     }
-//   }
-// });
+const width = 360;
+const height = 240;
 
 browser.runtime.onInstalled.addListener(
   ({ reason }: browser.Runtime.OnInstalledDetailsType) => {
@@ -80,24 +42,15 @@ browser.runtime.onMessage.addListener(async (message, sender) => {
   }
 });
 
-browser.runtime.onMessageExternal.addListener(
-  async ({ module, method, params }, sender) => {
-    if (!sender.url) return;
+browser.runtime.onMessageExternal.addListener(async (message) => {
+  try {
+    const res = await handleContentScriptMessage(message);
 
-    try {
-      const res = await handleContentScriptMessage({
-        method,
-        params,
-        module,
-        ext: "fedimint-web",
-      });
-
-      return { success: true, data: res };
-    } catch (err) {
-      return { success: false, message: (err as Error).message };
-    }
+    return { success: true, data: res };
+  } catch (err) {
+    return { success: false, message: (err as Error).message };
   }
-);
+});
 
 const modulePermissions: Record<
   ModuleType,
@@ -116,10 +69,8 @@ async function handleContentScriptMessage(message: WindowMessage) {
     let qs = new URLSearchParams({
       params: JSON.stringify(message.params),
       module: message.module,
+      method: message.method,
     });
-
-    // center prompt
-    const { top, left } = await getPosition(width, height);
 
     // prompt will be resolved with true or false
     let accept = await new Promise(async (resolve, reject) => {
@@ -144,8 +95,8 @@ async function handleContentScriptMessage(message: WindowMessage) {
         type: "popup",
         width: width,
         height: height,
-        top: top,
-        left: left,
+        top: Math.round(message.window[1]),
+        left: Math.round(message.window[0]),
       });
 
       function listenForClose(id?: number) {
@@ -195,36 +146,3 @@ async function handlePromptMessage(message: PromptMessage, sender: any) {
     browser.windows.remove(sender.tab.windowId);
   }
 }
-
-// TODO: open around element
-async function getPosition(width: number, height: number) {
-  let left = 0;
-  let top = 0;
-
-  try {
-    const lastFocused = await browser.windows.getLastFocused();
-
-    if (
-      lastFocused &&
-      lastFocused.top !== undefined &&
-      lastFocused.left !== undefined &&
-      lastFocused.width !== undefined &&
-      lastFocused.height !== undefined
-    ) {
-      // Position window in the center of the lastFocused window
-      top = Math.round(lastFocused.top + (lastFocused.height - height) / 2);
-      left = Math.round(lastFocused.left + (lastFocused.width - width) / 2);
-    } else {
-      console.error("Last focused window properties are undefined.");
-    }
-  } catch (error) {
-    console.error("Error getting window position:", error);
-  }
-
-  return {
-    top,
-    left,
-  };
-}
- 
-export { fedimint };
