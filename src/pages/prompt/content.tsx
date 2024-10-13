@@ -7,6 +7,8 @@ import browser from "webextension-polyfill";
 import { ModuleType } from "../../providers";
 import { useEffect, useState } from "react";
 import { Input } from "../../components/ui/input";
+import gr from "../../lib/gradients";
+import colors from "tailwindcss/colors";
 
 const titleKeys = {
   fedimint: {
@@ -60,7 +62,7 @@ export default function Prompt() {
   if (mod === "fedimint") {
     if (method === "generateEcash") {
       contentComponent = (
-        <Flex col className="divide-y divide-gray-800 w-full">
+        <Flex col className="divide-y divide-gray-600/50 w-full">
           {Object.entries(parsedParams as any).map(([key, value]) => (
             <Flex
               key={key}
@@ -69,7 +71,11 @@ export default function Prompt() {
               align="start"
               className="py-1"
             >
-              <Text size="sm" weight="medium" className="text-gray-300 whitespace-nowrap shrink-0">
+              <Text
+                size="sm"
+                weight="medium"
+                className="text-gray-300 whitespace-nowrap shrink-0"
+              >
                 {key}
               </Text>
               <Text size="sm" className="text-gray-400 break-all" multiline>
@@ -89,7 +95,7 @@ export default function Prompt() {
   } else if (mod === "nostr") {
     if (method === "signEvent") {
       contentComponent = (
-        <Flex col className="divide-y divide-gray-800 w-full">
+        <Flex col className="divide-y divide-gray-600/50 w-full">
           {Object.entries(parsedParams as any).map(([key, value]) => (
             <Flex
               key={key}
@@ -98,7 +104,11 @@ export default function Prompt() {
               align="start"
               className="py-1"
             >
-              <Text size="sm" weight="medium" className="text-gray-300 whitespace-nowrap shrink-0">
+              <Text
+                size="sm"
+                weight="medium"
+                className="text-gray-300 whitespace-nowrap shrink-0"
+              >
                 {key}
               </Text>
               <Text size="sm" className="text-gray-400 break-all" multiline>
@@ -157,7 +167,21 @@ export default function Prompt() {
   }
 
   return (
-    <Flex col className="h-screen">
+    <Flex
+      col
+      className="h-screen"
+      style={{
+        background: gr.merge(
+          gr.radial(
+            "circle at -10% -10%",
+            colors.sky["700"] + "f6",
+            colors.sky["800"] + "e8 20%",
+            "transparent 60%",
+            "transparent"
+          ),
+        ),
+      }}
+    >
       <Flex
         justify="between"
         gap={2}

@@ -8,9 +8,9 @@ export const Button = styled("button", {
     },
     variant: {
       primary:
-        "bg-sky-900 text-cyan-500 border-cyan-700 hover:bg-sky-800 hover:border-cyan-600 active:bg-sky-700 active:border-cyan-500",
+        "bg-sky-900/50 text-cyan-500 border-cyan-700 hover:bg-sky-800/50 hover:border-cyan-600 active:bg-sky-700 active:border-cyan-500",
       secondary:
-        "bg-gray-900 text-gray-400 border-gray-600 hover:bg-gray-800 hover:border-gray-500 active:bg-gray-800 active:border-gray-400",
+        "bg-gray-900/50 text-gray-400 border-gray-600 hover:bg-gray-800/50 hover:border-gray-500 active:bg-gray-800 active:border-gray-400",
     },
     fullWidth: {
       true: "w-full",

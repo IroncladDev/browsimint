@@ -53,7 +53,7 @@ export default function Popup() {
 
         <Fieldset>
           <Legend>Balance</Legend>
-          <Text>5000 msats</Text>
+          <Text>5000 sats</Text>
         </Fieldset>
 
         <Fieldset>
@@ -77,7 +77,7 @@ export default function Popup() {
 }
 
 const Fieldset = styled("fieldset", {
-  base: "flex flex-col gap-2 px-4 pt-1 pb-2 rounded-lg border border-gray-800 bg-gray-900",
+  base: "flex flex-col gap-2 px-2 pt-1 pb-2 rounded-lg border border-gray-600/50 bg-gray-900/50",
 });
 
 const Legend = styled("legend", {
