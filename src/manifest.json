@@ -43,7 +43,8 @@
     "web_accessible_resources": [
         {
             "resources": [
-                "src/providers/index.js"
+                "src/providers/index.js",
+                "src/assets/logo.svg"
             ],
             "matches": [
                 "<all_urls>"

@@ -30,6 +30,7 @@ export default defineConfig({
         "src/scripts/content-script.ts",
         "src/scripts/background.ts",
         "src/prompt.html",
+        "src/assets/logo.svg",
       ],
     }),
   ],

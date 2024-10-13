@@ -2,10 +2,9 @@
 export type FedimintProviderMethods = {
   generateEcash: [
     {
-      amount?: string | number;
-      defaultAmount?: string | number;
-      minimumAmount?: string | number;
-      maximumAmount?: string | number;
+      minAmount: number;
+      tryCancelAfter: number;
+      includeInvite: boolean;
     },
     { notes: string }
   ];
@@ -15,4 +14,3 @@ export type FedimintProviderMethods = {
   getCurrencyCode: [{}, string];
   getLanguageCode: [{}, string];
 };
-

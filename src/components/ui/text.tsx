@@ -9,12 +9,6 @@ const Text = styled("span", {
       lg: "text-lg",
       xl: "text-xl",
     },
-    color: {
-      default: "text-foreground",
-      dimmer: "text-foreground-dimmer",
-      dimmest: "text-foreground-dimmest",
-      inherit: "text-inherit",
-    },
     weight: {
       default: "font-normal",
       medium: "font-medium",
@@ -36,7 +30,6 @@ const Text = styled("span", {
     },
   },
   defaultVariants: {
-    color: "default",
     size: "sm",
     weight: "default",
     multiline: false,

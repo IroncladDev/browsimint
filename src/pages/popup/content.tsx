@@ -1,30 +1,85 @@
+import Switcher from "./switcher";
+import Flex from "../../components/ui/flex";
+import Text from "../../components/ui/text";
+import { useAppState } from "./state";
+import IntroOnboarding from "./onboarding/intro";
+import FederationsOnboarding from "./onboarding/federations";
+import NostrOnboarding from "./onboarding/nostr";
 import { styled } from "react-tailwind-variants";
+import ReceiveLN from "./widgets/receive-ln";
+import SendLN from "./widgets/send-ln";
+import ReceiveEcash from "./widgets/receive-ecash";
+import SendEcash from "./widgets/send-ecash";
+import { motion } from "framer-motion";
+import gr from "../../lib/gradients";
+import colors from "tailwindcss/colors";
 
 export default function Popup() {
+  const state = useAppState();
+
+  const background = gr.merge(
+    gr.radial(
+      "circle at 50% 120%",
+      colors.sky["700"] + "f6",
+      colors.sky["800"] + "e8 20%",
+      "transparent 70%",
+      "transparent"
+    )
+  );
+
+  if (state.onboardingStep === 0) {
+    return <IntroOnboarding />;
+  }
+
+  if (state.onboardingStep === 1) {
+    return <FederationsOnboarding />;
+  }
+
+  if (state.onboardingStep === 2) {
+    return <NostrOnboarding />;
+  }
 
   return (
-    <Container>
-      <Icon src="/icon-with-shadow.svg" />
-      <Title>vite-plugin-web-extension</Title>
-      <Description>
-        Template: <code>react-ts</code>
-      </Description>
-    </Container>
+    <Flex col gap={2} p={4} className="h-screen" asChild>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        style={{ background }}
+      >
+        <Flex justify="center">
+          <Switcher />
+        </Flex>
+
+        <Fieldset>
+          <Legend>Balance</Legend>
+          <Text>5000 msats</Text>
+        </Fieldset>
+
+        <Fieldset>
+          <Legend>Lightning ⚡</Legend>
+          <Flex gap={2}>
+            <ReceiveLN />
+            <SendLN />
+          </Flex>
+        </Fieldset>
+
+        <Fieldset>
+          <Legend>Ecash 💰</Legend>
+          <Flex gap={2}>
+            <ReceiveEcash />
+            <SendEcash />
+          </Flex>
+        </Fieldset>
+      </motion.div>
+    </Flex>
   );
 }
 
-const Container = styled("div", {
-  base: "flex flex-col items-center justify-center h-screen",
+const Fieldset = styled("fieldset", {
+  base: "flex flex-col gap-2 px-4 pt-1 pb-2 rounded-lg border border-gray-800 bg-gray-900",
 });
 
-const Icon = styled("img", {
-  base: "w-20 h-20",
-});
-
-const Title = styled("h1", {
-  base: "text-3xl text-blue-500",
-});
-
-const Description = styled("p", {
-  base: "text-gray-500",
+const Legend = styled("legend", {
+  base: "text-white text-sm font-medium",
 });

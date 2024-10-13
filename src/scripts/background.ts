@@ -16,7 +16,7 @@ let openPrompt: any = null;
 let promptMutex = new Mutex();
 let releasePromptMutex = () => {};
 const width = 360;
-const height = 240;
+const height = 400;
 
 browser.runtime.onInstalled.addListener(
   ({ reason }: browser.Runtime.OnInstalledDetailsType) => {
@@ -93,8 +93,8 @@ async function handleContentScriptMessage(message: WindowMessage) {
       const win = await browser.windows.create({
         url: `${browser.runtime.getURL("src/prompt.html")}?${qs.toString()}`,
         type: "popup",
-        width: width,
-        height: height,
+        width,
+        height,
         top: Math.round(message.window[1]),
         left: Math.round(message.window[0]),
       });

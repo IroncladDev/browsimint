@@ -1,6 +1,8 @@
 import FedimintProvider from "./fedimint";
 import { FedimintProviderMethods } from "./fedimint/types";
+import NostrProvider from "./nostr";
 import { NostrProviderMethods } from "./nostr/types";
+import WeblnProvider from "./webln";
 import { WeblnProviderMethods } from "./webln/types";
 
 export type ModuleType = "fedimint" | "nostr" | "webln";
@@ -29,8 +31,6 @@ export interface WindowMessage {
 declare global {
   interface Window {
     fedimint: FedimintProvider;
-    // fediInternal is an alias for fedimint
-    fediInternal: FedimintProvider;
     nostr: any;
     webln: any;
   }
@@ -39,4 +39,5 @@ declare global {
 let fedimint = new FedimintProvider();
 
 window.fedimint = fedimint;
-window.fediInternal = fedimint;
+window.nostr = new NostrProvider();
+window.webln = new WeblnProvider();

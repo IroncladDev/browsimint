@@ -42,10 +42,10 @@ window.addEventListener("message", async (message) => {
     };
 
     if (rect) {
-      const pos = calcBestPosition(rect);
+      const pos = getPopoverPlacement(rect);
       msg.window = [
-        pos.x + window.screenX + (window.outerWidth - window.innerWidth),
-        pos.y + window.screenY + (window.outerHeight - window.innerHeight),
+        pos.left + window.screenX + (window.outerWidth - window.innerWidth),
+        pos.top + window.screenY + (window.outerHeight - window.innerHeight),
       ];
     }
 
@@ -85,45 +85,50 @@ const isInteractiveElement = (element: Element) => {
 };
 
 const popupWidth = 360;
-const popupHeight = 240;
-const padding = 20; // Distance from the rect
+const popupHeight = 400;
+const padding = 20;
 
-const calcBestPosition = (rect: DOMRect) => {
-  // Get viewable area
-  const viewWidth = window.innerWidth;
-  const viewHeight = window.innerHeight;
+interface Placement {
+  top: number;
+  left: number;
+}
 
-  // Centers of the rect and screen
-  const rectCenterY = rect.top + rect.height / 2;
-  const screenCenterY = viewHeight / 2;
+function getPopoverPlacement(elementRect: DOMRect): Placement {
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
 
-  let x, y;
+  // Calculate available space around the element
+  const spaceAbove = elementRect.top - padding;
+  const spaceBelow = viewportHeight - (elementRect.top + elementRect.height + padding);
+  const spaceLeft = elementRect.left - padding;
+  const spaceRight = viewportWidth - (elementRect.left + elementRect.width + padding);
 
-  // Plonk x position logic in here
-  if (rect.right + padding + popupWidth <= viewWidth) {
-    x = rect.right + padding;
-  } else if (rect.left - popupWidth - padding >= 0) {
-    x = rect.left - popupWidth - padding;
+  // Determine the best placement based on available space
+  let top: number;
+  let left: number;
+
+  // Prioritize side-by-side placement
+  if (spaceLeft >= popupWidth) {
+    // Place to the left of the element
+    top = Math.max(padding, Math.min(elementRect.top + (elementRect.height - popupHeight) / 2, viewportHeight - popupHeight - padding));
+    left = elementRect.left - popupWidth - padding;
+  } else if (spaceRight >= popupWidth) {
+    // Place to the right of the element
+    top = Math.max(padding, Math.min(elementRect.top + (elementRect.height - popupHeight) / 2, viewportHeight - popupHeight - padding));
+    left = elementRect.left + elementRect.width + padding;
+  } else if (spaceAbove >= popupHeight) {
+    // Place above the element if no side space is available
+    top = elementRect.top - popupHeight - padding;
+    left = Math.max(padding, Math.min(elementRect.left + (elementRect.width - popupWidth) / 2, viewportWidth - popupWidth - padding));
+  } else if (spaceBelow >= popupHeight) {
+    // Place below the element if no side or top space is available
+    top = elementRect.top + elementRect.height + padding;
+    left = Math.max(padding, Math.min(elementRect.left + (elementRect.width - popupWidth) / 2, viewportWidth - popupWidth - padding));
   } else {
-    x = Math.max(0, viewWidth - popupWidth); // At least on-screen
+    // Default to top if no other space is available
+    top = elementRect.top - popupHeight - padding;
+    left = Math.max(padding, Math.min(elementRect.left + (elementRect.width - popupWidth) / 2, viewportWidth - popupWidth - padding));
   }
 
-  // Align logic by comparing rectCenterY to screenCenterY
-  if (rectCenterY < screenCenterY) {
-    // Center is closer to top half
-    if (rect.top - popupHeight - padding >= 0) {
-      y = rect.top - popupHeight - padding;
-    } else {
-      y = rect.bottom + padding; // Otherwise below
-    }
-  } else {
-    // Center is someplace lower than screen center
-    if (rect.bottom + padding + popupHeight <= viewHeight) {
-      y = rect.bottom + padding;
-    } else {
-      y = Math.max(0, viewHeight - popupHeight);
-    }
-  }
-
-  return { x, y };
-};
+  return { top, left };
+}

@@ -16,12 +16,7 @@ export default class FedimintProvider {
     getLanguageCode: 0,
   };
 
-  generateEcash(params: {
-    amount?: string | number;
-    defaultAmount?: string | number;
-    minimumAmount?: string | number;
-    maximumAmount?: string | number;
-  }) {
+  generateEcash(params: FedimintProviderMethods["generateEcash"][0]) {
     return this.call("generateEcash", params);
   }
 

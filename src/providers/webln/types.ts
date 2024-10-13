@@ -7,10 +7,7 @@ export type WeblnProviderMethods = {
   sendPayment: [string, { preimage: string }];
 };
 
-export type MakeInvoiceParams =
-  | string
-  | number
-  | {
+export type MakeInvoiceParams = {
       amount?: string | number;
       defaultAmount?: string | number;
       minimumAmount?: string | number;
