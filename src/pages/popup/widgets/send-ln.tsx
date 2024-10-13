@@ -1,12 +1,12 @@
 import {
   Sheet,
   SheetContent,
+  SheetTitle,
   SheetTrigger,
 } from "../../../components/ui/sheet";
 import { Button } from "../../../components/ui/button";
 import { useState } from "react";
 import Flex from "../../../components/ui/flex";
-import Text from "../../../components/ui/text";
 
 export default function SendLN() {
   const [open, setOpen] = useState(false);
@@ -20,7 +20,7 @@ export default function SendLN() {
       </SheetTrigger>
       <SheetContent>
         <Flex col gap={4} p={2}>
-          <Text>Pay Lightning Invoice</Text>
+          <SheetTitle>Pay Lightning Invoice</SheetTitle>
           <Button onClick={() => alert("Not implemented")}>Paste</Button>
         </Flex>
       </SheetContent>

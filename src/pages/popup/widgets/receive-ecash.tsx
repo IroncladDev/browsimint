@@ -1,11 +1,11 @@
 import {
   Sheet,
   SheetContent,
+  SheetTitle,
   SheetTrigger,
 } from "../../../components/ui/sheet";
 import { Button } from "../../../components/ui/button";
 import Flex from "../../../components/ui/flex";
-import Text from "../../../components/ui/text";
 
 export default function ReceiveEcash() {
   return (
@@ -17,7 +17,7 @@ export default function ReceiveEcash() {
       </SheetTrigger>
       <SheetContent>
         <Flex col gap={4} p={2}>
-          <Text>Redeem Ecash Notes</Text>
+          <SheetTitle>Redeem Ecash Notes</SheetTitle>
           <Button onClick={() => alert("Not implemented")}>Paste</Button>
         </Flex>
       </SheetContent>

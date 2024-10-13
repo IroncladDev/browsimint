@@ -1,6 +1,7 @@
 import {
   Sheet,
   SheetContent,
+  SheetTitle,
   SheetTrigger,
 } from "../../../components/ui/sheet";
 import { Button } from "../../../components/ui/button";
@@ -18,9 +19,9 @@ export default function SendEcash() {
       </SheetTrigger>
       <SheetContent>
         <Flex col gap={4} p={2}>
-          <Text size="base" weight="medium">
+          <SheetTitle>
             Send Ecash Notes
-          </Text>
+          </SheetTitle>
           <Flex col gap={1} width="full" grow>
             <Text>Amount (sats)</Text>
             <Input type="number" defaultValue={0} />
