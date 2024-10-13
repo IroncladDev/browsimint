@@ -11,7 +11,7 @@ const SheetClose = SheetPrimitive.Close;
 const SheetPortal = SheetPrimitive.Portal;
 
 const SheetOverlay = styled(SheetPrimitive.Overlay, {
-  base: `fixed inset-0 z-50 bg-sky-950/70 outline-none`,
+  base: `fixed inset-0 z-50 bg-sky-950/70 outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0`,
 });
 
 const SheetContent = React.forwardRef<
