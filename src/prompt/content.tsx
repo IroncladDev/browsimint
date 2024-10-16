@@ -1,13 +1,13 @@
 import { styled } from "react-tailwind-variants";
 import { approveRequest, denyRequest } from "./send-message";
-import { Button } from "../../components/ui/button";
-import Flex from "../../components/ui/flex";
-import Text from "../../components/ui/text";
+import { Button } from "../components/ui/button";
+import Flex from "../components/ui/flex";
+import Text from "../components/ui/text";
 import browser from "webextension-polyfill";
-import { ModuleType } from "../../providers";
+import { ModuleType } from "../providers";
 import { useEffect, useState } from "react";
-import { Input } from "../../components/ui/input";
-import gr from "../../lib/gradients";
+import { Input } from "../components/ui/input";
+import gr from "../lib/gradients";
 import colors from "tailwindcss/colors";
 
 const titleKeys = {

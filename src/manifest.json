@@ -1,54 +1,57 @@
 {
-    "{{chrome}}.manifest_version": 3,
-    "{{firefox}}.manifest_version": 2,
-    "icons": {
-        "16": "icon/16.png",
-        "32": "icon/32.png",
-        "48": "icon/48.png",
-        "96": "icon/96.png",
-        "128": "icon/128.png"
-    },
-    "{{chrome}}.action": {
-        "default_popup": "src/popup.html"
-    },
-    "{{firefox}}.browser_action": {
-        "default_popup": "src/popup.html"
-    },
-    "background": {
-        "{{chrome}}.service_worker": "src/scripts/background.ts",
-        "{{firefox}}.scripts": [
-            "src/scripts/background.ts"
-        ]
-    },
-    "permissions": [
-        "storage",
-        "activeTab",
-        "windows"
-    ],
-    "optional_permissions": [
-        "notifications"
-    ],
-    "content_scripts": [
-        {
-            "run_at": "document_end",
-            "matches": [
-                "<all_urls>"
-            ],
-            "js": [
-                "src/scripts/content-script.ts"
-            ],
-            "all_frames": true
-        }
-    ],
-    "web_accessible_resources": [
-        {
-            "resources": [
-                "src/providers/index.js",
-                "src/assets/logo.svg"
-            ],
-            "matches": [
-                "<all_urls>"
-            ]
-        }
+  "{{chrome}}.manifest_version": 3,
+  "{{firefox}}.manifest_version": 2,
+  "icons": {
+    "16": "icon/16.png",
+    "32": "icon/32.png",
+    "48": "icon/48.png",
+    "96": "icon/96.png",
+    "128": "icon/128.png"
+  },
+  "{{chrome}}.action": {
+    "default_popup": "src/popup.html"
+  },
+  "{{firefox}}.browser_action": {
+    "default_popup": "src/popup.html"
+  },
+  "background": {
+    "{{chrome}}.service_worker": "src/background/index.ts",
+    "{{firefox}}.scripts": [
+      "src/background/index.ts"
     ]
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "windows"
+  ],
+  "optional_permissions": [
+    "notifications"
+  ],
+  "content_scripts": [
+    {
+      "run_at": "document_end",
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "src/content-script.ts"
+      ],
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "src/providers/index.js",
+        "src/assets/logo.svg"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
+    }
+  ]
 }

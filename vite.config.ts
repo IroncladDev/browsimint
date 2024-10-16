@@ -27,16 +27,25 @@ export default defineConfig({
       disableAutoLaunch: true,
       additionalInputs: [
         "src/providers/index.ts",
-        "src/scripts/content-script.ts",
-        "src/scripts/background.ts",
+        "src/content-script.ts",
+        "src/background/index.ts",
         "src/prompt.html",
+        "src/popup.html",
         "src/assets/logo.svg",
       ],
     }),
   ],
 
+  build: {
+    target: 'esnext',
+  },
+
   worker: {
     format: "es",
     plugins: () => [wasm(), topLevelAwait()],
+  },
+
+  optimizeDeps: {
+    exclude: ["@fedimint/fedimint-client-wasm-web"],
   },
 });

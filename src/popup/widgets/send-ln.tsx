@@ -3,10 +3,10 @@ import {
   SheetContent,
   SheetTitle,
   SheetTrigger,
-} from "../../../components/ui/sheet";
-import { Button } from "../../../components/ui/button";
+} from "../../components/ui/sheet";
+import { Button } from "../../components/ui/button";
 import { useState } from "react";
-import Flex from "../../../components/ui/flex";
+import Flex from "../../components/ui/flex";
 
 export default function SendLN() {
   const [open, setOpen] = useState(false);

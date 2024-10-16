@@ -3,9 +3,9 @@ import {
   SheetContent,
   SheetTitle,
   SheetTrigger,
-} from "../../../components/ui/sheet";
-import { Button } from "../../../components/ui/button";
-import Flex from "../../../components/ui/flex";
+} from "../../components/ui/sheet";
+import { Button } from "../../components/ui/button";
+import Flex from "../../components/ui/flex";
 
 export default function ReceiveEcash() {
   return (

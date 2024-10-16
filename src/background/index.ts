@@ -1,7 +1,7 @@
 import { Mutex } from "async-mutex";
 import browser from "webextension-polyfill";
 import { ModuleType, ProviderModuleMethods, WindowMessage } from "../providers";
-import { PromptMessage } from "../pages/prompt/send-message";
+import { PromptMessage } from "../prompt/send-message";
 import FedimintProvider from "../providers/fedimint";
 import NostrProvider from "../providers/nostr";
 import WeblnProvider from "../providers/webln";
@@ -15,8 +15,51 @@ import { WeblnProviderMethods } from "../providers/webln/types";
 let openPrompt: any = null;
 let promptMutex = new Mutex();
 let releasePromptMutex = () => {};
+let WasmClient: any;
 const width = 360;
 const height = 400;
+
+class ModifiedURL extends URL {
+  constructor(url: string, base?: string | URL) {
+    try {
+      super(url, base);
+    } catch {
+      // Web SDK seems to reference itself with the wrong URL
+      super(browser.runtime.getURL("src/scripts/background.js"));
+    }
+  }
+}
+
+globalThis.document = {} as any;
+// @ts-ignore
+globalThis.URL = ModifiedURL;
+
+async function asdf(message: any) {
+  const WasmModule = await import("@fedimint/fedimint-client-wasm-web");
+  WasmClient = WasmModule.WasmClient;
+  console.log("WasmModule", WasmModule);
+  // INIT
+  await WasmModule.default();
+
+  let open = await WasmClient.open("testnet");
+
+  console.log(open, "OPEN");
+
+  if(!open) {
+    open = await WasmClient.join_federation(
+      "testnet",
+      "fed11qgqrgvnhwden5te0v9k8q6rp9ekh2arfdeukuet595cr2ttpd3jhq6rzve6zuer9wchxvetyd938gcewvdhk6tcqqysptkuvknc7erjgf4em3zfh90kffqf9srujn6q53d6r056e4apze5cw27h75"
+    );
+  }
+
+  const client = open;
+
+  console.log(client);
+  console.log(await client.rpc('', 'get_balance', JSON.stringify({}), console.log), "getBalance");
+  console.log(message, "MESSAGE");
+}
+
+// self.postMessage({ type: 'init', data: {} })
 
 browser.runtime.onInstalled.addListener(
   ({ reason }: browser.Runtime.OnInstalledDetailsType) => {
@@ -27,6 +70,8 @@ browser.runtime.onInstalled.addListener(
 );
 
 browser.runtime.onMessage.addListener(async (message, sender) => {
+  asdf(message);
+
   let { prompt } = message;
 
   try {

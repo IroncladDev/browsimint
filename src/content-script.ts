@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import { WindowMessage } from "../providers";
+import { WindowMessage } from "./providers";
 
 // inject the script that will provide window.nostr
 let script = document.createElement("script");

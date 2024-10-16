@@ -1,6 +1,6 @@
 import Switcher from "./switcher";
-import Flex from "../../components/ui/flex";
-import Text from "../../components/ui/text";
+import Flex from "../components/ui/flex";
+import Text from "../components/ui/text";
 import { useAppState } from "./state";
 import IntroOnboarding from "./onboarding/intro";
 import FederationsOnboarding from "./onboarding/federations";
@@ -11,7 +11,7 @@ import SendLN from "./widgets/send-ln";
 import ReceiveEcash from "./widgets/receive-ecash";
 import SendEcash from "./widgets/send-ecash";
 import { motion } from "framer-motion";
-import gr from "../../lib/gradients";
+import gr from "../lib/gradients";
 import colors from "tailwindcss/colors";
 
 export default function Popup() {

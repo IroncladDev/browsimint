@@ -1,11 +1,11 @@
 import { Check, ChevronDown } from "lucide-react";
 import { styled } from "react-tailwind-variants";
-import Text from "../../components/ui/text";
-import { Sheet, SheetContent, SheetTrigger } from "../../components/ui/sheet";
+import Text from "../components/ui/text";
+import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
 import { federations } from "./constants";
-import Flex from "../../components/ui/flex";
+import Flex from "../components/ui/flex";
 import { useAppState } from "./state";
-import { Button } from "../../components/ui/button";
+import { Button } from "../components/ui/button";
 
 export default function Switcher() {
   const state = useAppState();

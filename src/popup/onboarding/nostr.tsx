@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "../../../components/ui/button";
-import Flex from "../../../components/ui/flex";
-import Text from "../../../components/ui/text";
+import { Button } from "../../components/ui/button";
+import Flex from "../../components/ui/flex";
+import Text from "../../components/ui/text";
 import { useAppState } from "../state";
-import { Input } from "../../../components/ui/input";
-import gr from "../../../lib/gradients";
+import { Input } from "../../components/ui/input";
+import gr from "../../lib/gradients";
 import colors from "tailwindcss/colors";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 

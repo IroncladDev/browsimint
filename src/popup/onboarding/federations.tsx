@@ -1,13 +1,13 @@
 import { styled } from "react-tailwind-variants";
-import Flex from "../../../components/ui/flex";
-import Text from "../../../components/ui/text";
+import Flex from "../../components/ui/flex";
+import Text from "../../components/ui/text";
 import { federations } from "../constants";
 import { useAppState } from "../state";
 import { Check } from "lucide-react";
-import { Button } from "../../../components/ui/button";
+import { Button } from "../../components/ui/button";
 import { motion, useMotionValue, useSpring } from "framer-motion";
 import { useCallback, useEffect } from "react";
-import gr from "../../../lib/gradients";
+import gr from "../../lib/gradients";
 import colors from "tailwindcss/colors";
 
 export default function FederationsOnboarding() {
