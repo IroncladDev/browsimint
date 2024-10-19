@@ -1,4 +1,4 @@
-import { ModuleType, WindowMessage } from ".";
+import { ModuleMethodCall, ModuleType } from ".";
 import { PromiseQueue } from "./queue";
 
 const queue = new PromiseQueue();
@@ -12,7 +12,8 @@ export function postMessage<
       new Promise((resolve, reject) => {
         const id = Math.random().toString().slice(2);
 
-        const message: WindowMessage = {
+        const message: ModuleMethodCall = {
+          type: "methodCall",
           id,
           ext: "fedimint-web",
           module,

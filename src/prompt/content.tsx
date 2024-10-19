@@ -191,7 +191,7 @@ export default function Prompt() {
       >
         <Flex gap={2} align="center">
           <img
-            src={browser.runtime.getURL("src/assets/logo.svg")}
+            src={browser.runtime.getURL("logo.svg")}
             alt="logo"
             width={32}
             height={32}

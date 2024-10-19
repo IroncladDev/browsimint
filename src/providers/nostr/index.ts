@@ -11,11 +11,11 @@ export default class NostrProvider {
   };
 
   getPublicKey() {
-    this.call("getPublicKey", {});
+    return this.call("getPublicKey", {});
   }
 
   signEvent(event: UnsignedNostrEvent) {
-    this.call("signEvent", event);
+    return this.call("signEvent", event);
   }
 
   private call<T extends keyof NostrProviderMethods>(

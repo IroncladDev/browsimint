@@ -1,3 +1,5 @@
+import { PromptMessage } from "../prompt/send-message";
+import { ModuleKind } from "../types";
 import FedimintProvider from "./fedimint";
 import { FedimintProviderMethods } from "./fedimint/types";
 import NostrProvider from "./nostr";
@@ -19,7 +21,8 @@ export type ProviderModuleMethods<T extends ModuleType> = T extends "fedimint"
   ? WeblnProviderMethods
   : never;
 
-export interface WindowMessage {
+export interface ModuleMethodCall {
+  type: "methodCall"
   id?: string;
   ext: "fedimint-web";
   module: ModuleType;
@@ -27,6 +30,22 @@ export interface WindowMessage {
   params: any;
   window: [number, number];
 }
+
+export interface RpcCall {
+  type: "rpc"
+  ext: "fedimint-web"
+  module: ModuleKind;
+  method: string;
+  body: any
+  requestId: number
+}
+
+export interface UnsubscribeCall {
+  type: "unsubscribe"
+  requestId: number
+}
+
+export type WindowMessage = ModuleMethodCall | PromptMessage | RpcCall | UnsubscribeCall;
 
 declare global {
   interface Window {

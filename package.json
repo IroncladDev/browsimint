@@ -4,14 +4,13 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite & bun watch-tailwind",
-    "build": "tsc && vite build && bun build-tailwind && cp -r src/assets/ dist/src/assets/",
-    "build-tailwind": "tailwindcss -i ./src/index.css -o ./dist/index.css",
-    "watch-tailwind": "tailwindcss -i ./src/index.css -o ./dist/index.css --watch"
+    "dev": "vite & bun tailwind --watch",
+    "build": "tsc && vite build && bun tailwind && bun postbuild.ts",
+    "tailwind": "tailwindcss -i ./src/index.css -o ./dist/index.css",
+    "copy-wasm": "cp node_modules/@fedimint/fedimint-client-wasm-web/fedimint_client_wasm_bg.wasm dist/fedimint_client_wasm_bg.wasm"
   },
   "dependencies": {
-    "@fedimint/core-web": "^0.0.7",
-    "@fedimint/fedimint-client-wasm-web": "^0.0.2",
+    "@fedimint/core-web": "^0.0.2",
     "@radix-ui/react-dialog": "^1.1.2",
     "async-mutex": "^0.5.0",
     "buffer": "^6.0.3",

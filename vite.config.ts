@@ -23,6 +23,7 @@ export default defineConfig({
     wasm(),
     topLevelAwait(),
     webExtension({
+      browser: "brave",
       manifest: generateManifest,
       disableAutoLaunch: true,
       additionalInputs: [
@@ -31,13 +32,12 @@ export default defineConfig({
         "src/background/index.ts",
         "src/prompt.html",
         "src/popup.html",
-        "src/assets/logo.svg",
       ],
     }),
   ],
 
   build: {
-    target: 'esnext',
+    target: "esnext",
   },
 
   worker: {
@@ -46,6 +46,6 @@ export default defineConfig({
   },
 
   optimizeDeps: {
-    exclude: ["@fedimint/fedimint-client-wasm-web"],
+    exclude: ["@fedimint/core-web"],
   },
 });

@@ -1,6 +1,11 @@
 import { Mutex } from "async-mutex";
 import browser from "webextension-polyfill";
-import { ModuleType, ProviderModuleMethods, WindowMessage } from "../providers";
+import {
+  ModuleMethodCall,
+  ModuleType,
+  ProviderModuleMethods,
+  WindowMessage,
+} from "../providers";
 import { PromptMessage } from "../prompt/send-message";
 import FedimintProvider from "../providers/fedimint";
 import NostrProvider from "../providers/nostr";
@@ -11,55 +16,29 @@ import handleWeblnMessage from "./handlers/webln";
 import { FedimintProviderMethods } from "../providers/fedimint/types";
 import { NostrProviderMethods } from "../providers/nostr/types";
 import { WeblnProviderMethods } from "../providers/webln/types";
+import { FedimintWallet } from "@fedimint/core-web";
 
 let openPrompt: any = null;
 let promptMutex = new Mutex();
 let releasePromptMutex = () => {};
-let WasmClient: any;
+let wallet: FedimintWallet | null = null;
 const width = 360;
 const height = 400;
 
-class ModifiedURL extends URL {
-  constructor(url: string, base?: string | URL) {
-    try {
-      super(url, base);
-    } catch {
-      // Web SDK seems to reference itself with the wrong URL
-      super(browser.runtime.getURL("src/scripts/background.js"));
-    }
-  }
-}
+async function initWallet() {
+  const wal = new FedimintWallet();
 
-globalThis.document = {} as any;
-// @ts-ignore
-globalThis.URL = ModifiedURL;
+  let open = await wal.open("testnet");
 
-async function asdf(message: any) {
-  const WasmModule = await import("@fedimint/fedimint-client-wasm-web");
-  WasmClient = WasmModule.WasmClient;
-  console.log("WasmModule", WasmModule);
-  // INIT
-  await WasmModule.default();
-
-  let open = await WasmClient.open("testnet");
-
-  console.log(open, "OPEN");
-
-  if(!open) {
-    open = await WasmClient.join_federation(
-      "testnet",
-      "fed11qgqrgvnhwden5te0v9k8q6rp9ekh2arfdeukuet595cr2ttpd3jhq6rzve6zuer9wchxvetyd938gcewvdhk6tcqqysptkuvknc7erjgf4em3zfh90kffqf9srujn6q53d6r056e4apze5cw27h75"
+  if (!open) {
+    await wal.joinFederation(
+      "fed11qgqzc2nhwden5te0vejkg6tdd9h8gepwvejkg6tdd9h8garhduhx6at5d9h8jmn9wshxxmmd9uqqzgxg6s3evnr6m9zdxr6hxkdkukexpcs3mn7mj3g5pc5dfh63l4tj6g9zk4er",
+      "testnet"
     );
   }
 
-  const client = open;
-
-  console.log(client);
-  console.log(await client.rpc('', 'get_balance', JSON.stringify({}), console.log), "getBalance");
-  console.log(message, "MESSAGE");
+  wallet = wal;
 }
-
-// self.postMessage({ type: 'init', data: {} })
 
 browser.runtime.onInstalled.addListener(
   ({ reason }: browser.Runtime.OnInstalledDetailsType) => {
@@ -69,33 +48,44 @@ browser.runtime.onInstalled.addListener(
   }
 );
 
-browser.runtime.onMessage.addListener(async (message, sender) => {
-  asdf(message);
-
-  let { prompt } = message;
-
-  try {
-    if (prompt) {
-      handlePromptMessage(message, sender);
-    } else {
-      const res = await handleContentScriptMessage(message);
-
-      return { success: true, data: res };
+browser.runtime.onMessage.addListener(
+  async (message: WindowMessage, sender) => {
+    if (!wallet) await initWallet();
+    else {
+      console.log("WALLET INITIALIZED", wallet);
     }
-  } catch (err) {
-    return { success: false, message: (err as Error).message };
-  }
-});
 
-browser.runtime.onMessageExternal.addListener(async (message) => {
-  try {
-    const res = await handleContentScriptMessage(message);
+    try {
+      if (message.type === "prompt") {
+        handlePromptMessage(message, sender);
+      } else if (message.type === "methodCall") {
+        const res = await handleContentScriptMessage(
+          message as ModuleMethodCall
+        );
 
-    return { success: true, data: res };
-  } catch (err) {
-    return { success: false, message: (err as Error).message };
+        return { success: true, data: res };
+      }
+    } catch (err) {
+      return { success: false, message: (err as Error).message };
+    }
   }
-});
+);
+
+browser.runtime.onMessageExternal.addListener(
+  async (message: WindowMessage) => {
+    try {
+      if (message.type === "methodCall") {
+        const res = await handleContentScriptMessage(
+          message as ModuleMethodCall
+        );
+
+        return { success: true, data: res };
+      }
+    } catch (err) {
+      return { success: false, message: (err as Error).message };
+    }
+  }
+);
 
 const modulePermissions: Record<
   ModuleType,
@@ -106,7 +96,7 @@ const modulePermissions: Record<
   webln: WeblnProvider.permissions,
 };
 
-async function handleContentScriptMessage(message: WindowMessage) {
+async function handleContentScriptMessage(message: ModuleMethodCall) {
   // acquire mutex here before reading policies
   releasePromptMutex = await promptMutex.acquire();
 

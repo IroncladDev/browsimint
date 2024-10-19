@@ -1,12 +1,14 @@
 import browser from "webextension-polyfill";
 
 export type PromptMessage = {
+  type: "prompt";
   prompt: true;
   accept: boolean;
 };
 
 export function approveRequest() {
   const message: PromptMessage = {
+    type: "prompt",
     prompt: true,
     accept: true,
   };
@@ -16,6 +18,7 @@ export function approveRequest() {
 
 export function denyRequest() {
   const message: PromptMessage = {
+    type: "prompt",
     prompt: true,
     accept: false,
   };
