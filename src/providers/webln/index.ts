@@ -2,23 +2,34 @@ import { WeblnProviderMethods } from "./types";
 import { postMessage } from "../postMessage";
 
 export default class WeblnProvider {
-  // 0 = No permission needed
-  // 1 = Signature permission needed
-  // 2 = Payment permission needed
-  static permissions: Record<keyof WeblnProviderMethods, 0 | 1 | 2> = {
-    enable: 0,
-    makeInvoice: 1,
-    sendPayment: 2,
-  };
-
-  private isEnabled = false;
+  private hasBeenEnabled = false;
 
   async enable() {
-    if (this.isEnabled) {
+    if (this.hasBeenEnabled) {
       return;
     }
 
-    this.isEnabled = true;
+    this.hasBeenEnabled = true;
+  }
+
+  async isEnabled() {
+    return this.hasBeenEnabled;
+  }
+
+  async getInfo() {
+    return {
+      methods: [
+        "enable",
+        "isEnabled",
+        "makeInvoice",
+        "sendPayment",
+        "getBalance",
+      ],
+    };
+  }
+
+  async getBalance() {
+    return this.call("getBalance", {});
   }
 
   async makeInvoice(params: WeblnProviderMethods["makeInvoice"][0]) {
@@ -34,7 +45,7 @@ export default class WeblnProvider {
   }
 
   private ensureEnabled() {
-    if (!this.isEnabled) {
+    if (!this.hasBeenEnabled) {
       throw new Error("webln is not enabled");
     }
   }

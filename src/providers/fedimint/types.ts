@@ -1,16 +1,26 @@
+import {
+  Duration,
+  JSONObject,
+  JSONValue,
+  MintSpendNotesResponse,
+} from "@fedimint/core-web";
+
 // method: [args, return type]
 export type FedimintProviderMethods = {
-  generateEcash: [
+  getConfig: [{}, JSONValue];
+  getFederationId: [{}, string];
+  getInviteCode: [{ peer: number }, string | null];
+  listOperations: [{}, Array<JSONValue>];
+  redeemEcash: [{ notes: string }, void];
+  reissueExternalNotes: [{ oobNotes: string; extraMeta: JSONObject }, string];
+  spendNotes: [
     {
       minAmount: number;
-      tryCancelAfter: number;
+      tryCancelAfter: number | Duration;
       includeInvite: boolean;
+      extraMeta: JSONValue;
     },
-    { notes: string }
+    MintSpendNotesResponse
   ];
-  receiveEcash: [string, void];
-  getAuthenticatedMember: [{}, { id: string; username: string }];
-  getActiveFederation: [{}, { id: string; name: string; network: string }];
-  getCurrencyCode: [{}, string];
-  getLanguageCode: [{}, string];
+  parseNotes: [{ oobNotes: string }, number];
 };

@@ -2,23 +2,23 @@ import { Mutex } from "async-mutex";
 import browser from "webextension-polyfill";
 import {
   ModuleMethodCall,
-  ModuleType,
-  ProviderModuleMethods,
+  PermissionLevel,
+  PromptMessage,
   WindowMessage,
-} from "../providers";
-import { PromptMessage } from "../prompt/send-message";
-import FedimintProvider from "../providers/fedimint";
-import NostrProvider from "../providers/nostr";
-import WeblnProvider from "../providers/webln";
-import handleFedimintMessage from "./handlers/fedimint";
-import handleNostrMessage from "./handlers/nostr";
-import handleWeblnMessage from "./handlers/webln";
-import { FedimintProviderMethods } from "../providers/fedimint/types";
-import { NostrProviderMethods } from "../providers/nostr/types";
-import { WeblnProviderMethods } from "../providers/webln/types";
+} from "../types";
+import handleFedimintMessage, { FedimintParams } from "./handlers/fedimint";
+import handleNostrMessage, { NostrParams } from "./handlers/nostr";
+import handleWeblnMessage, { WeblnParams } from "./handlers/webln";
 import { FedimintWallet } from "@fedimint/core-web";
+import handleInternalMessage from "./handlers/internal";
+import { permissions } from "../lib/constants";
 
-let openPrompt: any = null;
+type PromptResolution = { accept: boolean; params?: any };
+
+let openPrompt: {
+  resolve: (reason: PromptResolution) => void;
+  reject: () => void;
+} | null = null;
 let promptMutex = new Mutex();
 let releasePromptMutex = () => {};
 let wallet: FedimintWallet | null = null;
@@ -50,18 +50,19 @@ browser.runtime.onInstalled.addListener(
 
 browser.runtime.onMessage.addListener(
   async (message: WindowMessage, sender) => {
+    if (message.ext !== "fedimint-web") return;
+
     if (!wallet) await initWallet();
-    else {
-      console.log("WALLET INITIALIZED", wallet);
-    }
 
     try {
       if (message.type === "prompt") {
         handlePromptMessage(message, sender);
       } else if (message.type === "methodCall") {
-        const res = await handleContentScriptMessage(
-          message as ModuleMethodCall
-        );
+        const res = await handleContentScriptMessage(message);
+
+        return { success: true, data: res };
+      } else if (message.type === "internalCall") {
+        const res = await handleInternalMessage(message);
 
         return { success: true, data: res };
       }
@@ -73,11 +74,15 @@ browser.runtime.onMessage.addListener(
 
 browser.runtime.onMessageExternal.addListener(
   async (message: WindowMessage) => {
+    if (message.ext !== "fedimint-web") return;
+
     try {
       if (message.type === "methodCall") {
-        const res = await handleContentScriptMessage(
-          message as ModuleMethodCall
-        );
+        const res = await handleContentScriptMessage(message);
+
+        return { success: true, data: res };
+      } else if (message.type === "internalCall") {
+        const res = await handleInternalMessage(message);
 
         return { success: true, data: res };
       }
@@ -87,18 +92,11 @@ browser.runtime.onMessageExternal.addListener(
   }
 );
 
-const modulePermissions: Record<
-  ModuleType,
-  Record<keyof ProviderModuleMethods<ModuleType>, 0 | 1 | 2>
-> = {
-  fedimint: FedimintProvider.permissions,
-  nostr: NostrProvider.permissions,
-  webln: WeblnProvider.permissions,
-};
-
 async function handleContentScriptMessage(message: ModuleMethodCall) {
   // acquire mutex here before reading policies
   releasePromptMutex = await promptMutex.acquire();
+
+  let handlerParams = message.params;
 
   try {
     let qs = new URLSearchParams({
@@ -108,44 +106,45 @@ async function handleContentScriptMessage(message: ModuleMethodCall) {
     });
 
     // prompt will be resolved with true or false
-    let accept = await new Promise(async (resolve, reject) => {
-      const currentPermission =
-        modulePermissions[message.module][
-          message.method as keyof ProviderModuleMethods<ModuleType>
-        ];
+    let result = await new Promise<PromptResolution>(
+      async (resolve, reject) => {
+        const permissionLevel = permissions[message.module][message.method];
 
-      if (currentPermission === 0) {
-        releasePromptMutex();
-        openPrompt = null;
-        resolve(true);
+        if (permissionLevel === PermissionLevel.None) {
+          releasePromptMutex();
+          openPrompt = null;
+          resolve({ accept: true });
 
-        return;
-        // TODO: maybe do permission levels
-      }
-
-      openPrompt = { resolve, reject };
-
-      const win = await browser.windows.create({
-        url: `${browser.runtime.getURL("src/prompt.html")}?${qs.toString()}`,
-        type: "popup",
-        width,
-        height,
-        top: Math.round(message.window[1]),
-        left: Math.round(message.window[0]),
-      });
-
-      function listenForClose(id?: number) {
-        if (id === win.id) {
-          resolve(false);
-          browser.windows.onRemoved.removeListener(listenForClose);
+          return;
         }
-      }
+        // TODO: payment/signature event strictness
 
-      browser.windows.onRemoved.addListener(listenForClose);
-    });
+        openPrompt = { resolve, reject };
+
+        const win = await browser.windows.create({
+          url: `${browser.runtime.getURL("src/prompt.html")}?${qs.toString()}`,
+          type: "popup",
+          width,
+          height,
+          top: Math.round(message.window[1]),
+          left: Math.round(message.window[0]),
+        });
+
+        function listenForClose(id?: number) {
+          if (id === win.id) {
+            resolve({ accept: false });
+            browser.windows.onRemoved.removeListener(listenForClose);
+          }
+        }
+
+        browser.windows.onRemoved.addListener(listenForClose);
+      }
+    );
 
     // TODO: better error handling
-    if (!accept) throw new Error("denied");
+    if (!result.accept) throw new Error("denied");
+
+    handlerParams = result.params;
   } catch (err) {
     releasePromptMutex();
 
@@ -154,24 +153,30 @@ async function handleContentScriptMessage(message: ModuleMethodCall) {
 
   if (message.module === "fedimint") {
     return await handleFedimintMessage(
-      message.method as keyof FedimintProviderMethods,
-      message.params
+      {
+        method: message.method as FedimintParams["method"],
+        params: handlerParams,
+      },
+      wallet!
     );
   } else if (message.module === "nostr") {
-    return await handleNostrMessage(
-      message.method as keyof NostrProviderMethods,
-      message.params
-    );
+    return await handleNostrMessage({
+      method: message.method as NostrParams["method"],
+      params: handlerParams,
+    });
   } else if (message.module === "webln") {
     return await handleWeblnMessage(
-      message.method as keyof WeblnProviderMethods,
-      message.params
+      {
+        method: message.method as WeblnParams["method"],
+        params: handlerParams,
+      },
+      wallet!
     );
   }
 }
 
 async function handlePromptMessage(message: PromptMessage, sender: any) {
-  openPrompt?.resolve?.(message.accept);
+  openPrompt?.resolve?.({ accept: true, params: message.params });
 
   openPrompt = null;
 

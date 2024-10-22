@@ -1,4 +1,4 @@
-import { ModuleMethodCall, ModuleType } from ".";
+import { ModuleMethodCall, WindowModuleKind } from "../types";
 import { PromiseQueue } from "./queue";
 
 const queue = new PromiseQueue();
@@ -6,7 +6,7 @@ const queue = new PromiseQueue();
 export function postMessage<
   U extends { [key: string]: [any, any] },
   T extends keyof U
->(method: T, params: U[T][0], module: ModuleType): Promise<U[T][1]> {
+>(method: T, params: U[T][0], module: WindowModuleKind): Promise<U[T][1]> {
   return queue.add(
     () =>
       new Promise((resolve, reject) => {

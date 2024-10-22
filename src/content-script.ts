@@ -1,5 +1,5 @@
 import browser from "webextension-polyfill";
-import { ModuleMethodCall, WindowMessage } from "./providers";
+import { ModuleMethodCall } from "./types";
 
 // inject the script that will provide window.nostr
 let script = document.createElement("script");

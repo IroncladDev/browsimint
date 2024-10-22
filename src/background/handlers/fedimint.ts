@@ -1,33 +1,73 @@
+import { Duration, FedimintWallet, JSONObject } from "@fedimint/core-web";
 import { FedimintProviderMethods } from "../../providers/fedimint/types";
 
-export default async function handleFedimintMessage<
-  T extends keyof FedimintProviderMethods
->(
-  method: T,
-  params: FedimintProviderMethods[T][0]
-): Promise<FedimintProviderMethods[T][1]> {
+export type FedimintParams =
+  | {
+      method: "getConfig";
+      params: undefined;
+    }
+  | {
+      method: "getFederationId";
+      params: undefined;
+    }
+  | {
+      method: "getInviteCode";
+      params: { peer: number };
+    }
+  | {
+      method: "listOperations";
+      params: undefined;
+    }
+  | {
+      method: "redeemEcash";
+      params: { notes: string };
+    }
+  | {
+      method: "reissueExternalNotes";
+      params: { oobNotes: string; extraMeta?: JSONObject };
+    }
+  | {
+      method: "spendNotes";
+      params: {
+        minAmount: number;
+        tryCancelAfter: number | Duration;
+        includeInvite: boolean;
+        extraMeta?: JSONObject;
+      };
+    }
+  | {
+      method: "parseNotes";
+      params: { oobNotes: string };
+    };
+
+export default async function handleFedimintMessage(
+  { method, params }: FedimintParams,
+  wallet: FedimintWallet
+) {
   switch (method) {
-    case "generateEcash":
-      return {
-        notes: "",
-      };
-    case "getAuthenticatedMember":
-      return {
-        id: Math.random().toString().slice(2),
-        username: "unknown",
-      };
-    case "getActiveFederation":
-      return {
-        id: "412d2a9338ebeee5957382eb06eac07fa5235087b5a7d5d0a6e18c635394e9ed",
-        name: "Fedi Internal",
-        network: "bitcoin",
-      };
-    case "getCurrencyCode":
-      return "USD";
-    case "getLanguageCode":
-      return "en";
-    case "receiveEcash":
-    default:
-      return;
+    case "getConfig":
+      return await wallet.federation.getConfig();
+    case "getFederationId":
+      return await wallet.federation.getFederationId();
+    case "getInviteCode":
+      return await wallet.federation.getInviteCode(params.peer);
+    case "listOperations":
+      return await wallet.federation.listOperations();
+    case "redeemEcash":
+      return await wallet.mint.redeemEcash(params.notes);
+    case "reissueExternalNotes":
+      return await wallet.mint.reissueExternalNotes(
+        params.oobNotes,
+        params.extraMeta
+      );
+    case "spendNotes":
+      return await wallet.mint.spendNotes(
+        params.minAmount,
+        params.tryCancelAfter,
+        params.includeInvite,
+        params.extraMeta
+      );
+    case "parseNotes":
+      return await wallet.mint.parseNotes(params.oobNotes);
   }
 }

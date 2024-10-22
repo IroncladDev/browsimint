@@ -1,42 +1,58 @@
 import { FedimintProviderMethods } from "./types";
 import { postMessage } from "../postMessage";
+import {
+  Duration,
+  JSONObject,
+  JSONValue,
+  MintSpendNotesResponse,
+} from "@fedimint/core-web";
 
 export default class FedimintProvider {
-  version: number = 0;
-
-  // 0 = No permission needed
-  // 1 = Signature permission needed
-  // 2 = Payment permission needed
-  static permissions: Record<keyof FedimintProviderMethods, 0 | 1 | 2> = {
-    generateEcash: 2,
-    receiveEcash: 1,
-    getAuthenticatedMember: 0,
-    getActiveFederation: 0,
-    getCurrencyCode: 0,
-    getLanguageCode: 0,
-  };
-
-  generateEcash(params: FedimintProviderMethods["generateEcash"][0]) {
-    return this.call("generateEcash", params);
+  async getConfig(): Promise<JSONValue> {
+    return await this.call("getConfig", {});
   }
 
-  receiveEcash(notes: string) {
-    return this.call("receiveEcash", notes);
+  async getFederationId(): Promise<string> {
+    return await this.call("getFederationId", {});
   }
 
-  getAuthenticatedMember() {
-    return this.call("getAuthenticatedMember", {});
+  async getInviteCode(peer?: string): Promise<string | null> {
+    return await this.call("getInviteCode", { peer });
   }
 
-  getActiveFederation() {
-    return this.call("getActiveFederation", {});
+  async redeemEcash(notes: string): Promise<void> {
+    await this.call("redeemEcash", { notes });
   }
 
-  getCurrencyCode() {
-    return this.call("getCurrencyCode", {});
+  async reissueExternalNotes(
+    oobNotes: string,
+    extraMeta: JSONObject = {}
+  ): Promise<string> {
+    return await this.call("reissueExternalNotes", {
+      oobNotes,
+      extraMeta,
+    });
   }
 
-  private call<T extends keyof FedimintProviderMethods>(
+  async spendNotes(
+    minAmount: number,
+    tryCancelAfter: number | Duration = 0,
+    includeInvite: boolean = false,
+    extraMeta: JSONValue = {}
+  ): Promise<MintSpendNotesResponse> {
+    return await this.call("spendNotes", {
+      minAmount,
+      includeInvite,
+      extraMeta,
+      tryCancelAfter,
+    });
+  }
+
+  async validateNotes(oobNotes: string): Promise<number> {
+    return await this.call("validateNotes", { oobNotes });
+  }
+
+  call<T extends keyof FedimintProviderMethods>(
     type: T,
     params: FedimintProviderMethods[T][0]
   ): Promise<FedimintProviderMethods[T][1]> {

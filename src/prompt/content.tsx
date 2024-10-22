@@ -4,7 +4,7 @@ import { Button } from "../components/ui/button";
 import Flex from "../components/ui/flex";
 import Text from "../components/ui/text";
 import browser from "webextension-polyfill";
-import { ModuleType } from "../providers";
+import { WindowModuleKind } from "../types";
 import { useEffect, useState } from "react";
 import { Input } from "../components/ui/input";
 import gr from "../lib/gradients";
@@ -33,14 +33,14 @@ export default function Prompt() {
 
   const method = params.get("method");
   const methodParams = params.get("params");
-  const mod = params.get("module") as ModuleType | null;
+  const mod = params.get("module") as WindowModuleKind | null;
 
   const parsedParams = methodParams === null ? null : JSON.parse(methodParams);
 
   if (!["fedimint", "nostr", "webln"].includes(mod ?? "") || method === null)
     return <Container>Error</Container>;
 
-  const titleModule = titleKeys[mod as ModuleType];
+  const titleModule = titleKeys[mod as WindowModuleKind];
 
   let contentComponent: React.ReactNode = null;
 

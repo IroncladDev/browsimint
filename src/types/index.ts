@@ -1,33 +1,34 @@
-export type JSONValue =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: JSONValue }
-  | JSONValue[]
+export type WindowModuleKind = "fedimint" | "nostr" | "webln";
 
-export type StreamError = {
-  error: string
-  data: never
-  end: never
+export interface PromptMessage {
+  type: "prompt";
+  ext: "fedimint-web";
+  prompt: true;
+  accept: boolean;
+  params?: any;
 }
 
-export type StreamSuccess<T extends JSONValue> = {
-  data: T
-  error: never
-  end: never
+export interface ModuleMethodCall {
+  type: "methodCall";
+  id?: string;
+  ext: "fedimint-web";
+  module: WindowModuleKind;
+  method: string;
+  params: any;
+  window: [number, number];
 }
 
-export type StreamEnd = {
-  end: string
-  data: never
-  error: never
+export interface InternalCall {
+  type: "internalCall";
+  ext: "fedimint-web";
+  method: string;
+  params: any;
 }
 
-export type StreamResult<T extends JSONValue> =
-  | StreamSuccess<T>
-  | StreamError
-  | StreamEnd
+export type WindowMessage = ModuleMethodCall | PromptMessage | InternalCall;
 
-export const MODULE_KINDS = ['', 'ln', 'mint'] as const
-export type ModuleKind = (typeof MODULE_KINDS)[number]
+export enum PermissionLevel {
+  None = 0,
+  Signature = 1,
+  Payment = 2,
+}
