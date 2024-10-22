@@ -1,6 +1,7 @@
-import { UnsignedNostrEvent } from "../../providers/nostr/types";
 import { validateEvent, finalizeEvent, getPublicKey, nip19 } from "nostr-tools";
 import { Buffer } from "buffer";
+import { LocalStore } from "../../lib/storage";
+import { UnsignedNostrEvent } from "../../providers/nostr";
 
 export type NostrParams =
   | {
@@ -17,12 +18,13 @@ export default async function handleNostrMessage({
   params,
 }: NostrParams) {
   // TODO: import
-  const nsec =
-    "nsec1qq3ht6ve8eluz7mgmwyxzz7s0x94436tx72zf2xhxv73vzhtyuvq44m23j";
+  const nsec = await LocalStore.getNsec();
+
+  if(!nsec) throw new Error("No nsec found");
 
   let { data: rawKey } = nip19.decode(nsec);
 
-  let hexStr = Buffer.from(rawKey).toString("hex");
+  let hexStr = Buffer.from(rawKey as string).toString("hex");
   let uint8Array = Uint8Array.from(Buffer.from(hexStr, "hex"));
 
   switch (method) {

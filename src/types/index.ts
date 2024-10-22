@@ -2,7 +2,8 @@ import { FedimintParams } from "../background/handlers/fedimint";
 import { NostrParams } from "../background/handlers/nostr";
 import { WeblnParams } from "../background/handlers/webln";
 
-export type WindowModuleKind = "fedimint" | "nostr" | "webln";
+export const windowModule = ["fedimint", "nostr", "webln"] as const;
+export type WindowModuleKind = (typeof windowModule)[number];
 
 export type MethodParams = WeblnParams | NostrParams | FedimintParams;
 
@@ -26,8 +27,8 @@ export type PromptMessage<T extends MethodParams = MethodParams> =
   | PromptMessageAccepted<T>;
 
 export interface ModuleMethodCall {
+  id: string;
   type: "methodCall";
-  id?: string;
   ext: "fedimint-web";
   module: WindowModuleKind;
   method: string;

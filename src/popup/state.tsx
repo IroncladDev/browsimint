@@ -34,8 +34,6 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       const activeFederation = await LocalStore.getActiveFederation()
       const nsec = await LocalStore.getNsec()
 
-      console.log(federations, activeFederation, nsec, "INITIAL STATE");
-
       setFederations(federations as Array<FederationItemSchema>);
       setActiveFederation(activeFederation as FederationItemSchema);
       setNostrSecretKey(nsec as string);
@@ -44,8 +42,6 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const listener = async (changes: any) => {
-      console.log(changes, "STORAGE CHANGES");
-
       for (const item in changes) {
         switch (item as StorageKey) {
           case "federations":

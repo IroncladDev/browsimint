@@ -1,5 +1,4 @@
-import { FedimintProviderMethods } from "./types";
-import { postMessage } from "../postMessage";
+import { postMessage } from "./postMessage";
 import {
   Duration,
   JSONObject,
@@ -9,29 +8,29 @@ import {
 
 export default class FedimintProvider {
   async getConfig(): Promise<JSONValue> {
-    return await this.call("getConfig", {});
+    return await postMessage("getConfig", {}, "fedimint");
   }
 
   async getFederationId(): Promise<string> {
-    return await this.call("getFederationId", {});
+    return await postMessage("getFederationId", {}, "fedimint");
   }
 
   async getInviteCode(peer?: number): Promise<string | null> {
-    return await this.call("getInviteCode", { peer });
+    return await postMessage("getInviteCode", { peer }, "fedimint");
   }
 
   async redeemEcash(notes: string): Promise<void> {
-    await this.call("redeemEcash", { notes });
+    await postMessage("redeemEcash", { notes }, "fedimint");
   }
 
   async reissueExternalNotes(
     oobNotes: string,
     extraMeta: JSONObject = {}
   ): Promise<string> {
-    return await this.call("reissueExternalNotes", {
+    return await postMessage("reissueExternalNotes", {
       oobNotes,
       extraMeta,
-    });
+    }, "fedimint");
   }
 
   async spendNotes(
@@ -40,22 +39,15 @@ export default class FedimintProvider {
     includeInvite: boolean = false,
     extraMeta: JSONValue = {}
   ): Promise<MintSpendNotesResponse> {
-    return await this.call("spendNotes", {
+    return await postMessage("spendNotes", {
       minAmount,
       includeInvite,
       extraMeta,
       tryCancelAfter,
-    });
+    }, "fedimint");
   }
 
   async parseNotes(oobNotes: string): Promise<number> {
-    return await this.call("parseNotes", { oobNotes });
-  }
-
-  call<T extends keyof FedimintProviderMethods>(
-    type: T,
-    params: FedimintProviderMethods[T][0]
-  ): Promise<FedimintProviderMethods[T][1]> {
-    return postMessage(type, params, "fedimint");
+    return await postMessage("parseNotes", { oobNotes }, "fedimint");
   }
 }

@@ -29,16 +29,11 @@ let wallet = new FedimintWallet();
 const width = 360;
 const height = 400;
 
-browser.storage.onChanged.addListener(async function (changes) {
-  console.log(changes);
+wallet.setLogLevel("debug");
 
+browser.storage.onChanged.addListener(async function (changes) {
   for (const item in changes) {
     const { oldValue, newValue } = changes[item];
-    console.log(
-      `Key "${item}" changed from "${JSON.stringify(
-        oldValue
-      )}" to "${JSON.stringify(newValue)}"`
-    );
 
     switch (item) {
       case "activeFederation":
@@ -46,6 +41,8 @@ browser.storage.onChanged.addListener(async function (changes) {
           if (wallet.isOpen()) {
             await wallet.cleanup();
             wallet = new FedimintWallet();
+
+            wallet.setLogLevel("debug");
 
             await wallet.open(newValue);
           } else {
@@ -148,6 +145,12 @@ async function handleContentScriptMessage(message: ModuleMethodCall) {
 
   let handlerParams = message.params;
 
+  const activeFederation = await LocalStore.getActiveFederation();
+
+  if (activeFederation && !wallet.isOpen()) {
+    wallet.open(activeFederation.id);
+  }
+
   try {
     let qs = new URLSearchParams({
       params: JSON.stringify(message.params),
@@ -218,7 +221,7 @@ async function handleContentScriptMessage(message: ModuleMethodCall) {
         method: message.method as FedimintParams["method"],
         params: handlerParams,
       },
-      wallet!
+      wallet
     );
   } else if (message.module === "nostr") {
     return await handleNostrMessage({
@@ -231,7 +234,7 @@ async function handleContentScriptMessage(message: ModuleMethodCall) {
         method: message.method as WeblnParams["method"],
         params: handlerParams,
       },
-      wallet!
+      wallet
     );
   }
 }

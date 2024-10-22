@@ -5,9 +5,9 @@ TODO:
 - [ ] Webln injection
 - [ ] Nostr injection
 - [ ] Fedimint injection
-- [ ] Bring-your-own nsec
-- [ ] Federation switching
-- [ ] Functionalize popup
+- [x] Bring-your-own nsec
+- [x] Federation switching
+- [x] Functionalize popup
 - [ ] Fix window positioning
 - [ ] Open window in bottom-right corner if no focused element
 - [ ] Keyboard navigation / shortcuts

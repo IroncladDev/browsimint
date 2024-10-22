@@ -4,28 +4,28 @@ import { Button } from "../components/ui/button";
 import Flex from "../components/ui/flex";
 import Text from "../components/ui/text";
 import browser from "webextension-polyfill";
-import { WindowModuleKind } from "../types";
+import { windowModule, WindowModuleKind } from "../types";
 import { useEffect, useState } from "react";
 import { Input } from "../components/ui/input";
 import gr from "../lib/gradients";
 import colors from "tailwindcss/colors";
 
-const titleKeys = {
+const titleKeys: Record<WindowModuleKind, { [key: string]: string }> = {
   fedimint: {
-    generateEcash: "Spend Ecash Notes",
-    receiveEcash: "Claim Ecash Notes",
+    spendNotes: "Spend Ecash",
   },
   nostr: {
-    signEvent: "Sign Nostr Event",
+    signEvent: "Sign Event",
   },
   webln: {
-    makeInvoice: "Create Lightning Invoice",
-    sendPayment: "Send Lightning Payment",
+    makeInvoice: "Create Invoice",
+    sendPayment: "Send Payment",
   },
-};
+} as const;
 
 export default function Prompt() {
   const [amount, setAmount] = useState<number>(0);
+  const [description, setDescription] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const url = new URL(window.location.href);
 
@@ -37,7 +37,7 @@ export default function Prompt() {
 
   const parsedParams = methodParams === null ? null : JSON.parse(methodParams);
 
-  if (!["fedimint", "nostr", "webln"].includes(mod ?? "") || method === null)
+  if (!windowModule.includes((mod ?? "") as any) || method === null)
     return <Container>Error</Container>;
 
   const titleModule = titleKeys[mod as WindowModuleKind];
@@ -152,6 +152,8 @@ export default function Prompt() {
                 className="resize-y min-h-[60px]"
                 placeholder="Memo..."
                 rows={3}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               ></textarea>
             </Input>
           </Flex>
@@ -223,7 +225,18 @@ export default function Prompt() {
           <Button
             onClick={() => {
               setLoading(true);
-              approveRequest({ method: method as any, params: parsedParams });
+
+              if (mod === "webln" && method === "makeInvoice") {
+                approveRequest({
+                  method,
+                  params: {
+                    amount,
+                    description,
+                  },
+                });
+              } else {
+                approveRequest({ method: method as any, params: parsedParams });
+              }
             }}
             fullWidth
             grow
