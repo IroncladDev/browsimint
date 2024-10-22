@@ -9,7 +9,7 @@ import {
 export type FedimintProviderMethods = {
   getConfig: [{}, JSONValue];
   getFederationId: [{}, string];
-  getInviteCode: [{ peer: number }, string | null];
+  getInviteCode: [{ peer?: number }, string | null];
   listOperations: [{}, Array<JSONValue>];
   redeemEcash: [{ notes: string }, void];
   reissueExternalNotes: [{ oobNotes: string; extraMeta: JSONObject }, string];

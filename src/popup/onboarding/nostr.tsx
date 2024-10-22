@@ -7,6 +7,7 @@ import { Input } from "../../components/ui/input";
 import gr from "../../lib/gradients";
 import colors from "tailwindcss/colors";
 import { motion, useMotionValue, useSpring } from "framer-motion";
+import { LocalStore } from "../../lib/storage";
 
 export default function NostrOnboarding() {
   const [nsec, setNsec] = useState("");
@@ -116,7 +117,7 @@ export default function NostrOnboarding() {
           <Button
             disabled={nsec.length === 0}
             onClick={() => {
-              state.setNostrSecretKey(nsec);
+              LocalStore.setKey("nsec", nsec);
               state.setOnboardingStep(3);
             }}
           >

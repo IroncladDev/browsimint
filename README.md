@@ -14,3 +14,6 @@ TODO:
 - [ ] Settings page
     - [ ] Permission strictness
     - [ ] Nsec
+
+- [ ] Nsec validation
+- [ ] Federation validation

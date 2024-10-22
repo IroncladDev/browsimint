@@ -178,7 +178,7 @@ export default function Prompt() {
             colors.sky["800"] + "e8 20%",
             "transparent 60%",
             "transparent"
-          ),
+          )
         ),
       }}
     >
@@ -212,7 +212,7 @@ export default function Prompt() {
         <Flex gap={2} align="center">
           <Button
             onClick={() => {
-              denyRequest();
+              denyRequest({ method: method as any });
             }}
             variant="secondary"
             fullWidth
@@ -223,9 +223,7 @@ export default function Prompt() {
           <Button
             onClick={() => {
               setLoading(true);
-              setTimeout(() => {
-                approveRequest();
-              }, 500 + Math.random() * 2500);
+              approveRequest({ method: method as any, params: parsedParams });
             }}
             fullWidth
             grow

@@ -5,12 +5,16 @@ import { useAppState } from "../state";
 import { Check } from "lucide-react";
 import { Button } from "../../components/ui/button";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import gr from "../../lib/gradients";
 import colors from "tailwindcss/colors";
 import { federations } from "../../lib/constants";
+import { FederationItemSchema, LocalStore } from "../../lib/storage";
 
 export default function FederationsOnboarding() {
+  const [selectedFederations, setSelectedFederations] = useState<
+    Array<FederationItemSchema>
+  >([]);
   const state = useAppState();
   const gradient = useCallback((p: number) => {
     const rotateFactor = p * 30;
@@ -18,7 +22,7 @@ export default function FederationsOnboarding() {
 
     return gr.merge(
       gr.radial(
-        `circle at ${50 + (60 * p)}% ${110 - (110 * p)}%`,
+        `circle at ${50 + 60 * p}% ${110 - 110 * p}%`,
         colors.sky["700"] + "f6",
         colors.sky["800"] + "c5 100px",
         "transparent 300px",
@@ -75,23 +79,31 @@ export default function FederationsOnboarding() {
         <Flex col gap={2} width="full">
           {federations.map((federation, index) => (
             <FederationItem
-              name={federation.name}
-              icon={federation.icon}
-              network={federation.network}
+              {...federation}
               key={index}
+              selected={selectedFederations.some((x) => x.id === federation.id)}
+              onSelect={() => {
+                if (selectedFederations.some((x) => x.id === federation.id)) {
+                  setSelectedFederations(
+                    selectedFederations.filter((x) => x.id !== federation.id)
+                  );
+                } else {
+                  setSelectedFederations([...selectedFederations, federation]);
+                }
+              }}
             />
           ))}
         </Flex>
 
         <Flex col gap={2} width="full">
           <Button
-            disabled={state.joinedFederations.length === 0}
+            disabled={selectedFederations.length === 0}
             onClick={() => {
-              state.setActiveFederation(state.joinedFederations[0]);
+              LocalStore.joinFederations(selectedFederations);
               state.setOnboardingStep(2);
             }}
           >
-            Continue ({state.joinedFederations.length})
+            Continue ({selectedFederations.length})
           </Button>
           <Button
             variant="secondary"
@@ -110,28 +122,16 @@ function FederationItem({
   name,
   icon,
   network,
-}: {
-  name: string;
-  icon: string;
-  network: "signet" | "bitcoin";
-}) {
-  const state = useAppState();
-
+  selected,
+  onSelect,
+}: FederationItemSchema & { selected: boolean; onSelect: () => void }) {
   return (
     <ItemContainer
       gap={2}
       align="center"
       asChild
-      selected={state.joinedFederations.includes(name)}
-      onClick={() => {
-        if (state.joinedFederations.includes(name)) {
-          state.setJoinedFederations(
-            state.joinedFederations.filter((x) => x !== name)
-          );
-        } else {
-          state.setJoinedFederations([...state.joinedFederations, name]);
-        }
-      }}
+      selected={selected}
+      onClick={onSelect}
       className="p-1.5"
     >
       <button>
@@ -144,7 +144,7 @@ function FederationItem({
         />
         <Text className="text-white">{name}</Text>
         <Flex grow>{network === "signet" && <Pill>Signet</Pill>}</Flex>
-        {state.joinedFederations.includes(name) && (
+        {selected && (
           <SelectedIndicator>
             <Check className="w-4 h-4" />
           </SelectedIndicator>

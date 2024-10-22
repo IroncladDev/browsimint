@@ -16,7 +16,7 @@ export default class FedimintProvider {
     return await this.call("getFederationId", {});
   }
 
-  async getInviteCode(peer?: string): Promise<string | null> {
+  async getInviteCode(peer?: number): Promise<string | null> {
     return await this.call("getInviteCode", { peer });
   }
 
@@ -48,8 +48,8 @@ export default class FedimintProvider {
     });
   }
 
-  async validateNotes(oobNotes: string): Promise<number> {
-    return await this.call("validateNotes", { oobNotes });
+  async parseNotes(oobNotes: string): Promise<number> {
+    return await this.call("parseNotes", { oobNotes });
   }
 
   call<T extends keyof FedimintProviderMethods>(

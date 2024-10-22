@@ -2,23 +2,23 @@ import { Check, ChevronDown } from "lucide-react";
 import { styled } from "react-tailwind-variants";
 import Text from "../components/ui/text";
 import { Sheet, SheetContent, SheetTrigger } from "../components/ui/sheet";
-import { federations } from "./constants";
 import Flex from "../components/ui/flex";
 import { useAppState } from "./state";
 import { Button } from "../components/ui/button";
+import { federations } from "../lib/constants";
+import { FederationItemSchema, LocalStore } from "../lib/storage";
 
 export default function Switcher() {
   const state = useAppState();
-  const activeFederation = federations.find(
-    (f) => f.name === state.activeFederation
-  );
 
   return (
     <Sheet>
       <SheetTrigger asChild>
         <Outer>
-          <Icon src={activeFederation?.icon} width={24} height={24} />
-          <Text size="base" weight="medium" className="text-white">{activeFederation?.name}</Text>
+          <Icon src={state.activeFederation?.icon} width={24} height={24} />
+          <Text size="base" weight="medium" className="text-white">
+            {state.activeFederation?.name}
+          </Text>
           <ChevronDown className="w-4 h-4 text-white" />
         </Outer>
       </SheetTrigger>
@@ -26,14 +26,9 @@ export default function Switcher() {
         <Flex col gap={4}>
           <Flex col gap={2}>
             {federations
-              .filter((x) => state.joinedFederations.includes(x.name))
+              .filter((x) => state.federations.some((f) => f.id === x.id))
               .map((federation) => (
-                <FederationSwitchItem
-                  key={federation.name}
-                  name={federation.name}
-                  icon={federation.icon}
-                  network={federation.network}
-                />
+                <FederationSwitchItem key={federation.name} {...federation} />
               ))}
           </Flex>
           <Flex col gap={2}>
@@ -48,15 +43,8 @@ export default function Switcher() {
   );
 }
 
-function FederationSwitchItem({
-  name,
-  icon,
-  network,
-}: {
-  name: string;
-  icon: string;
-  network: "signet" | "bitcoin";
-}) {
+function FederationSwitchItem(item: FederationItemSchema) {
+  const { name, icon, network, id } = item;
   const state = useAppState();
 
   return (
@@ -64,9 +52,9 @@ function FederationSwitchItem({
       gap={2}
       align="center"
       asChild
-      selected={state.activeFederation === name}
+      selected={state.activeFederation?.id === id}
       onClick={() => {
-        state.setActiveFederation(name);
+        LocalStore.setKey("activeFederation", item.id);
       }}
       className="p-1.5"
     >
@@ -80,7 +68,7 @@ function FederationSwitchItem({
         />
         <Text className="text-white">{name}</Text>
         <Flex grow>{network === "signet" && <Pill>Signet</Pill>}</Flex>
-        {state.activeFederation === name && (
+        {state.activeFederation?.id === id && (
           <SelectedIndicator>
             <Check className="w-4 h-4" />
           </SelectedIndicator>

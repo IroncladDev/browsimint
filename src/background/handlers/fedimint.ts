@@ -1,5 +1,4 @@
 import { Duration, FedimintWallet, JSONObject } from "@fedimint/core-web";
-import { FedimintProviderMethods } from "../../providers/fedimint/types";
 
 export type FedimintParams =
   | {

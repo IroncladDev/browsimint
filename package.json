@@ -10,7 +10,7 @@
     "copy-wasm": "cp node_modules/@fedimint/fedimint-client-wasm-web/fedimint_client_wasm_bg.wasm dist/fedimint_client_wasm_bg.wasm"
   },
   "dependencies": {
-    "@fedimint/core-web": "^0.0.2",
+    "@fedimint/core-web": "^0.0.7",
     "@radix-ui/react-dialog": "^1.1.2",
     "async-mutex": "^0.5.0",
     "buffer": "^6.0.3",
@@ -22,7 +22,8 @@
     "react-dom": "^18.2.0",
     "react-tailwind-variants": "^1.0.2",
     "vite-plugin-top-level-await": "^1.4.4",
-    "vite-plugin-wasm": "^3.3.0"
+    "vite-plugin-wasm": "^3.3.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",

@@ -27,15 +27,19 @@ export default function Popup() {
     )
   );
 
-  if (state.onboardingStep === 0) {
+  if (
+    state.onboardingStep === 0 &&
+    state.federations.length === 0 &&
+    state.nostrSecretKey === null
+  ) {
     return <IntroOnboarding />;
   }
 
-  if (state.onboardingStep === 1) {
+  if (state.onboardingStep === 1 && state.federations.length === 0) {
     return <FederationsOnboarding />;
   }
 
-  if (state.onboardingStep === 2) {
+  if (state.onboardingStep === 2 && state.nostrSecretKey === null) {
     return <NostrOnboarding />;
   }
 
