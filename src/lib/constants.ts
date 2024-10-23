@@ -21,7 +21,7 @@ export const permissions: Record<
   },
   webln: {
     makeInvoice: PermissionLevel.Payment,
-    sendPayment: PermissionLevel.Signature,
+    sendPayment: PermissionLevel.Payment,
     getBalance: PermissionLevel.None,
   },
 } as const;

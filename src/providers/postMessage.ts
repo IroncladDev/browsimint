@@ -25,8 +25,6 @@ export function postMessage<
         window.postMessage(message, "*");
 
         function handleWindowMessage(messageEvent: MessageEvent) {
-          console.log("RESMSG", messageEvent);
-
           if (
             !messageEvent.data ||
             !messageEvent.data.response ||

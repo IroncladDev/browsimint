@@ -162,7 +162,7 @@ export default function Prompt() {
     } else if (method === "sendPayment") {
       contentComponent = (
         <Text size="sm" className="text-gray-500 break-all w-full" multiline>
-          {parsedParams as string}
+          {JSON.stringify(parsedParams)}
         </Text>
       );
     }

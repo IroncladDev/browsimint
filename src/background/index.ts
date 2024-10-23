@@ -148,7 +148,7 @@ async function handleContentScriptMessage(message: ModuleMethodCall) {
   const activeFederation = await LocalStore.getActiveFederation();
 
   if (activeFederation && !wallet.isOpen()) {
-    wallet.open(activeFederation.id);
+    await wallet.open(activeFederation.id);
   }
 
   try {

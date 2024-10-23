@@ -11,7 +11,7 @@ export type FedimintParams =
     }
   | {
       method: "getInviteCode";
-      params: { peer: number };
+      params: { peer?: number };
     }
   | {
       method: "listOperations";
@@ -49,7 +49,7 @@ export default async function handleFedimintMessage(
     case "getFederationId":
       return await wallet.federation.getFederationId();
     case "getInviteCode":
-      return await wallet.federation.getInviteCode(params.peer);
+      return await wallet.federation.getInviteCode(params.peer ?? 0);
     case "listOperations":
       return await wallet.federation.listOperations();
     case "redeemEcash":
