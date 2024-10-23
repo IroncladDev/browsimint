@@ -1,6 +1,7 @@
 import { Mutex } from "async-mutex";
 import browser from "webextension-polyfill";
 import {
+  BalanceUpdate,
   ModuleMethodCall,
   PermissionLevel,
   PromptMessage,
@@ -26,10 +27,31 @@ let openPrompt: {
 let promptMutex = new Mutex();
 let releasePromptMutex = () => {};
 let wallet = new FedimintWallet();
+let balanceSubscription: () => void = () => {};
 const width = 360;
 const height = 400;
 
 wallet.setLogLevel("debug");
+
+const initOpen = async () => {
+  const activeFederation = await LocalStore.getActiveFederation();
+
+  if (activeFederation && !wallet.isOpen()) {
+    balanceSubscription();
+    await wallet.open(activeFederation.id);
+    balanceSubscription = wallet.balance.subscribeBalance(async (balance) => {
+      browser.runtime
+        .sendMessage({
+          ext: "fedimint-web",
+          type: "balance",
+          balance,
+        } as BalanceUpdate)
+        .catch(() => {});
+    });
+  }
+};
+
+initOpen();
 
 browser.storage.onChanged.addListener(async function (changes) {
   for (const item in changes) {
@@ -37,18 +59,27 @@ browser.storage.onChanged.addListener(async function (changes) {
 
     switch (item) {
       case "activeFederation":
-        if (oldValue !== newValue) {
-          if (wallet.isOpen()) {
-            await wallet.cleanup();
-            wallet = new FedimintWallet();
+        if (wallet.isOpen()) {
+          balanceSubscription();
+          await wallet.cleanup();
+          wallet = new FedimintWallet();
 
-            wallet.setLogLevel("debug");
+          wallet.setLogLevel("debug");
 
-            await wallet.open(newValue);
-          } else {
-            await wallet.open();
-          }
+          await wallet.open(newValue);
+        } else {
+          await wallet.open(newValue);
         }
+
+        balanceSubscription = wallet.balance.subscribeBalance(
+          async (balance) => {
+            browser.runtime.sendMessage({
+              ext: "fedimint-web",
+              type: "balance",
+              balance,
+            } as BalanceUpdate);
+          }
+        );
         break;
       case "federations":
         const existingFeds: Array<FederationItemSchema> = oldValue ?? [];
@@ -109,9 +140,20 @@ browser.runtime.onMessage.addListener(
 
         return { success: true, data: res };
       } else if (message.type === "internalCall") {
-        const res = await handleInternalMessage(message);
+        const res = await handleInternalMessage(
+          { method: message.method, params: message.params } as any,
+          wallet
+        );
 
         return { success: true, data: res };
+      } else if (message.type === "balanceRequest") {
+        if (wallet.isOpen()) {
+          browser.runtime.sendMessage({
+            ext: "fedimint-web",
+            type: "balance",
+            balance: await wallet.balance.getBalance(),
+          } as BalanceUpdate);
+        }
       }
     } catch (err) {
       return { success: false, message: (err as Error).message };
@@ -129,9 +171,17 @@ browser.runtime.onMessageExternal.addListener(
 
         return { success: true, data: res };
       } else if (message.type === "internalCall") {
-        const res = await handleInternalMessage(message);
+        const res = await handleInternalMessage(
+          {
+            method: message.method,
+            params: message.params,
+          } as any,
+          wallet
+        );
 
         return { success: true, data: res };
+      } else {
+        return;
       }
     } catch (err) {
       return { success: false, message: (err as Error).message };
@@ -145,11 +195,7 @@ async function handleContentScriptMessage(message: ModuleMethodCall) {
 
   let handlerParams = message.params;
 
-  const activeFederation = await LocalStore.getActiveFederation();
-
-  if (activeFederation && !wallet.isOpen()) {
-    await wallet.open(activeFederation.id);
-  }
+  await initOpen();
 
   try {
     let qs = new URLSearchParams({

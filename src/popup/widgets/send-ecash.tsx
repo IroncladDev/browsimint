@@ -8,10 +8,54 @@ import { Button } from "../../components/ui/button";
 import Flex from "../../components/ui/flex";
 import Text from "../../components/ui/text";
 import { Input } from "../../components/ui/input";
+import { useEffect, useState } from "react";
+import { useToast } from "../../components/ui/use-toast";
+import { l } from "vite/dist/node/types.d-aGj9QkWt";
+import { makeInternalCall } from "../messaging";
+import { MintSpendNotesResponse } from "@fedimint/core-web";
 
 export default function SendEcash() {
+  const [amount, setAmount] = useState(0);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { toast } = useToast();
+
+  const reset = () => {
+    setAmount(0);
+    setLoading(false);
+  };
+
+  const handleSpendEcash = async () => {
+    setLoading(true);
+
+    const res = await makeInternalCall<MintSpendNotesResponse>({
+      method: "spendEcash",
+      params: {
+        minAmount: amount * 1000,
+        includeInvite: false,
+      },
+    });
+
+    if (res.success) {
+      navigator.clipboard.writeText(res.data.notes).then(() => {
+        toast({ title: "Notes Copied to clipboard" });
+        reset();
+        setOpen(false);
+      });
+    } else {
+      toast({
+        title: "Failed to spend notes",
+        description: res.message,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (!open) reset();
+  }, [open]);
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button small fullWidth variant="secondary" grow>
           Send
@@ -19,14 +63,16 @@ export default function SendEcash() {
       </SheetTrigger>
       <SheetContent>
         <Flex col gap={4} p={2}>
-          <SheetTitle>
-            Send Ecash Notes
-          </SheetTitle>
+          <SheetTitle>Send Ecash Notes</SheetTitle>
           <Flex col gap={1} width="full" grow>
             <Text>Amount (sats)</Text>
-            <Input type="number" defaultValue={0} />
+            <Input
+              type="number"
+              value={String(amount)}
+              onChange={(e) => setAmount(Number(e.target.value))}
+            />
           </Flex>
-          <Button onClick={() => alert("Not implemented")}>Send</Button>
+          <Button onClick={handleSpendEcash} disabled={loading}>Send</Button>
         </Flex>
       </SheetContent>
     </Sheet>

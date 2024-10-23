@@ -1,4 +1,5 @@
 import { FedimintParams } from "../background/handlers/fedimint";
+import { InternalParams } from "../background/handlers/internal";
 import { NostrParams } from "../background/handlers/nostr";
 import { WeblnParams } from "../background/handlers/webln";
 
@@ -36,14 +37,23 @@ export interface ModuleMethodCall {
   window: [number, number];
 }
 
-export interface InternalCall {
+export type InternalCall = {
   type: "internalCall";
   ext: "fedimint-web";
-  method: string;
-  params: any;
+} & InternalParams;
+
+export type BalanceUpdate = {
+  type: "balance";
+  ext: "fedimint-web";
+  balance: number;
 }
 
-export type WindowMessage = ModuleMethodCall | PromptMessage | InternalCall;
+export type BalanceRequest = {
+  type: "balanceRequest";
+  ext: "fedimint-web";
+}
+
+export type WindowMessage = ModuleMethodCall | PromptMessage | InternalCall | BalanceUpdate | BalanceRequest;
 
 export enum PermissionLevel {
   None = 0,

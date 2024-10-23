@@ -8,6 +8,7 @@ import {
 } from "react";
 import browser from "webextension-polyfill";
 import { FederationItemSchema, LocalStore, StorageKey } from "../lib/storage";
+import { BalanceRequest, WindowMessage } from "../types";
 
 interface AppState {
   federations: Array<FederationItemSchema>;
@@ -15,6 +16,7 @@ interface AppState {
   nostrSecretKey: string | null;
   onboardingStep: number;
   setOnboardingStep: Dispatch<SetStateAction<number>>;
+  balance: number;
 }
 
 const AppStateContext = createContext<AppState | null>(null);
@@ -27,12 +29,13 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     useState<FederationItemSchema | null>(null);
   const [nostrSecretKey, setNostrSecretKey] = useState<string | null>(null);
   const [onboardingStep, setOnboardingStep] = useState<number>(0);
+  const [balance, setBalance] = useState<number>(0);
 
   useEffect(() => {
     (async () => {
-      const federations = await LocalStore.getFederations()
-      const activeFederation = await LocalStore.getActiveFederation()
-      const nsec = await LocalStore.getNsec()
+      const federations = await LocalStore.getFederations();
+      const activeFederation = await LocalStore.getActiveFederation();
+      const nsec = await LocalStore.getNsec();
 
       setFederations(federations as Array<FederationItemSchema>);
       setActiveFederation(activeFederation as FederationItemSchema);
@@ -64,6 +67,27 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
+  useEffect(() => {
+    const balanceListener = (message: WindowMessage) => {
+      if (message.ext !== "fedimint-web") return;
+
+      if (message.type === "balance") {
+        setBalance(message.balance);
+      }
+    };
+
+    browser.runtime.onMessage.addListener(balanceListener);
+
+    browser.runtime.sendMessage({
+      ext: "fedimint-web",
+      type: "balanceRequest",
+    } as BalanceRequest);
+
+    return () => {
+      browser.runtime.onMessage.removeListener(balanceListener);
+    };
+  }, []);
+
   return (
     <AppStateContext.Provider
       value={{
@@ -72,6 +96,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
         nostrSecretKey,
         onboardingStep,
         setOnboardingStep,
+        balance,
       }}
     >
       {children}
