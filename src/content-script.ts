@@ -5,7 +5,7 @@ import { ModuleMethodCall } from "./types";
 let script = document.createElement("script");
 script.setAttribute("async", "false");
 script.setAttribute("type", "text/javascript");
-script.setAttribute("src", browser.runtime.getURL("src/providers/index.js"));
+script.setAttribute("src", browser.runtime.getURL("src/injection/index.js"));
 document.head.appendChild(script);
 
 // listen for messages from that script
@@ -37,7 +37,7 @@ window.addEventListener("message", async (message) => {
       module: message.data.module,
       method: message.data.method,
       params: message.data.params,
-      window: [
+      windowPos: [
         window.innerWidth / 2 - popupWidth / 2,
         window.innerHeight / 2 - popupHeight / 2,
       ],
@@ -45,7 +45,7 @@ window.addEventListener("message", async (message) => {
 
     if (rect) {
       const pos = getPopoverPlacement(rect);
-      msg.window = [
+      msg.windowPos = [
         pos.left + window.screenX + (window.outerWidth - window.innerWidth),
         pos.top + window.screenY + (window.outerHeight - window.innerHeight),
       ];

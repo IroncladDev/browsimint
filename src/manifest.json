@@ -35,7 +35,7 @@
     }
   ],
   "web_accessible_resources": [
-    "src/providers/index.js",
+    "src/injection/index.js",
     "src/assets/logo.svg"
   ]
 }

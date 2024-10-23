@@ -1,5 +1,5 @@
 import { FedimintParams } from "../background/handlers/fedimint";
-import { InternalParams } from "../background/handlers/internal";
+import { InternalParams } from "../background/listeners/internal";
 import { NostrParams } from "../background/handlers/nostr";
 import { WeblnParams } from "../background/handlers/webln";
 
@@ -34,7 +34,7 @@ export interface ModuleMethodCall {
   module: WindowModuleKind;
   method: string;
   params: any;
-  window: [number, number];
+  windowPos: [number, number];
 }
 
 export type InternalCall = {

@@ -27,7 +27,7 @@ export default defineConfig({
       manifest: generateManifest,
       disableAutoLaunch: true,
       additionalInputs: [
-        "src/providers/index.ts",
+        "src/injection/index.ts",
         "src/content-script.ts",
         "src/background/index.ts",
         "src/prompt.html",

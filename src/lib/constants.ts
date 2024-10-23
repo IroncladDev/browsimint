@@ -1,6 +1,11 @@
 import { PermissionLevel, WindowModuleKind } from "../types";
 import { FederationItemSchema } from "./storage";
 
+// Prompt Window Dimensions
+export const promptWidth = 360;
+export const promptHeight = 400;
+
+// Permission Levels
 export const permissions: Record<
   WindowModuleKind,
   { [key: string]: PermissionLevel }
@@ -26,6 +31,7 @@ export const permissions: Record<
   },
 } as const;
 
+// Hardcoded public federations
 export const federations: Array<FederationItemSchema> = [
   {
     name: "Fedi Testnet",

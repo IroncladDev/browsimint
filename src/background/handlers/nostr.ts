@@ -1,7 +1,7 @@
 import { validateEvent, finalizeEvent, getPublicKey, nip19 } from "nostr-tools";
 import { Buffer } from "buffer";
 import { LocalStore } from "../../lib/storage";
-import { UnsignedNostrEvent } from "../../providers/nostr";
+import { UnsignedNostrEvent } from "../../injection/providers/nostr";
 
 export type NostrParams =
   | {

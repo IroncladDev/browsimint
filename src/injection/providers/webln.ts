@@ -1,4 +1,4 @@
-import { postMessage } from "./postMessage";
+import { postMessage } from "../postMessage";
 
 export default class WeblnProvider {
   private hasBeenEnabled = false;

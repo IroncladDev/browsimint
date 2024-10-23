@@ -22,3 +22,4 @@ TODO:
 - [ ] Permission strictness settings
 - [ ] Nsec settings
 - [ ] Keyboard navigation / shortcuts
+- [ ] PIN protection

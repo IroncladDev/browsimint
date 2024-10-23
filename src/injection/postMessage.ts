@@ -19,7 +19,7 @@ export function postMessage<
           module,
           method: method as string,
           params,
-          window: [0, 0],
+          windowPos: [0, 0],
         };
 
         window.postMessage(message, "*");

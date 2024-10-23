@@ -7,12 +7,14 @@ import { useAppState } from "./state";
 import { Button } from "../components/ui/button";
 import { federations } from "../lib/constants";
 import { FederationItemSchema, LocalStore } from "../lib/storage";
+import { useState } from "react";
 
 export default function Switcher() {
+  const [open, setOpen] = useState(false);
   const state = useAppState();
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Outer>
           <Icon src={state.activeFederation?.icon} width={24} height={24} />
@@ -28,7 +30,14 @@ export default function Switcher() {
             {federations
               .filter((x) => state.federations.some((f) => f.id === x.id))
               .map((federation) => (
-                <FederationSwitchItem key={federation.name} {...federation} />
+                <FederationSwitchItem
+                  key={federation.name}
+                  onSelect={() => {
+                    LocalStore.setKey("activeFederation", federation.id);
+                    setOpen(false);
+                  }}
+                  {...federation}
+                />
               ))}
           </Flex>
           <Flex col gap={2}>
@@ -43,7 +52,10 @@ export default function Switcher() {
   );
 }
 
-function FederationSwitchItem(item: FederationItemSchema) {
+function FederationSwitchItem({
+  onSelect,
+  ...item
+}: FederationItemSchema & { onSelect: () => void }) {
   const { name, icon, network, id } = item;
   const state = useAppState();
 
@@ -53,9 +65,7 @@ function FederationSwitchItem(item: FederationItemSchema) {
       align="center"
       asChild
       selected={state.activeFederation?.id === id}
-      onClick={() => {
-        LocalStore.setKey("activeFederation", item.id);
-      }}
+      onClick={onSelect}
       className="p-1.5"
     >
       <button>

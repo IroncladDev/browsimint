@@ -1,10 +1,11 @@
 import {
   Duration,
-  FedimintWallet,
   GatewayInfo,
   JSONObject,
 } from "@fedimint/core-web";
 import { LocalStore } from "../../lib/storage";
+import { InternalCall } from "../../types";
+import { wallet } from "../state";
 
 export type InternalParams =
   | {
@@ -41,10 +42,10 @@ export type InternalParams =
       };
     };
 
-export default async function handleInternalMessage(
-  { method, params }: InternalParams,
-  wallet: FedimintWallet
-) {
+export default async function handleInternalMessage({
+  method,
+  params,
+}: InternalCall) {
   const activeFederation = await LocalStore.getActiveFederation();
 
   if (activeFederation && !wallet.isOpen()) {

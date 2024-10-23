@@ -57,7 +57,7 @@ export default function Popup() {
 
         <Fieldset>
           <Legend>Balance</Legend>
-          <Text>{state.balance} sats</Text>
+          <Text>{Math.round(state.balance / 1000)} sats</Text>
         </Fieldset>
 
         <Fieldset>

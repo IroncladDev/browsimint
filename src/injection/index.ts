@@ -1,6 +1,6 @@
-import FedimintProvider from "./fedimint";
-import NostrProvider from "./nostr";
-import WeblnProvider from "./webln";
+import FedimintProvider from "./providers/fedimint";
+import NostrProvider from "./providers/nostr";
+import WeblnProvider from "./providers/webln";
 
 declare global {
   interface Window {
