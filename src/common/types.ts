@@ -1,5 +1,5 @@
 import { z } from "zod"
-import { windowModule } from "../lib/constants"
+import { windowModule } from "./constants"
 import {
   extensionMessage,
   messageBalanceRequest,
@@ -10,11 +10,12 @@ import {
   messagePromptChoice,
   messagePromptReject,
   windowAck,
-} from "../lib/schemas/messages"
+} from "./schemas/messages"
 
 // Window module kind
 export type WindowModuleKind = (typeof windowModule)[number]
 
+// Message types
 export type MessagePromptReject = z.infer<typeof messagePromptReject> // Rejecting a prompt from the popup
 export type MessagePromptAccept = z.infer<typeof messagePromptAccept> // Accepting a prompt from the popup
 export type MessagePromptChoice = z.infer<typeof messagePromptChoice> // Reject or accept a prompt from the popup

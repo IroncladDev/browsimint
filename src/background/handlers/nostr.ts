@@ -1,5 +1,5 @@
 import { UnsignedNostrEvent } from "@/injection/providers/nostr"
-import { LocalStore } from "@/lib/storage"
+import { LocalStore } from "@common/storage"
 import { Buffer } from "buffer"
 import { finalizeEvent, getPublicKey, nip19, validateEvent } from "nostr-tools"
 

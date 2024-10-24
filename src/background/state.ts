@@ -1,4 +1,4 @@
-import { MessagePromptChoice } from "@/types"
+import { MessagePromptChoice } from "@common/types"
 import { FedimintWallet } from "@fedimint/core-web"
 import { Mutex } from "async-mutex"
 

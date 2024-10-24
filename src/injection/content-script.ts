@@ -1,6 +1,6 @@
-import { sendExtensionMessage } from "@/lib/messaging/extension"
-import { postWindowMessage } from "@/lib/messaging/window"
-import { MessageModuleCall } from "@/types"
+import { sendExtensionMessage } from "@common/messaging/extension"
+import { postWindowMessage } from "@common/messaging/window"
+import { MessageModuleCall } from "@common/types"
 import browser from "webextension-polyfill"
 
 // inject the script that will provide window.nostr

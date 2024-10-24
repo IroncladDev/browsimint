@@ -22,6 +22,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@common": path.resolve(__dirname, "./src"),
     },
   },
   plugins: [
@@ -34,7 +35,7 @@ export default defineConfig({
       disableAutoLaunch: true,
       additionalInputs: [
         "src/injection/index.ts",
-        "src/content-script.ts",
+        "src/injection/content-script.ts",
         "src/background/index.ts",
         "src/prompt.html",
         "src/popup.html",

@@ -1,6 +1,6 @@
-import { postWindowMessage } from "../lib/messaging/window"
-import { messageModuleCall } from "../lib/schemas/messages"
-import { MessageModuleCall, WindowModuleKind } from "../types"
+import { postWindowMessage } from "../common/messaging/window"
+import { messageModuleCall } from "../common/schemas/messages"
+import { MessageModuleCall, WindowModuleKind } from "../common/types"
 import { PromiseQueue } from "./queue"
 
 const queue = new PromiseQueue()

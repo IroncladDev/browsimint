@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button"
-import Flex from "@/components/ui/flex"
-import { Input } from "@/components/ui/input"
+import { OutgoingLightningPayment } from "@fedimint/core-web"
+import { useEffect, useState } from "react"
+import { Button } from "../components/ui/button"
+import Flex from "../components/ui/flex"
+import { Input } from "../components/ui/input"
 import {
   Sheet,
   SheetContent,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
-import { useToast } from "@/components/ui/use-toast"
-import { OutgoingLightningPayment } from "@fedimint/core-web"
-import { useEffect, useState } from "react"
+} from "../components/ui/sheet"
+import { useToast } from "../components/ui/use-toast"
 import { makeInternalCall } from "../messaging"
 
 export default function SendLN() {

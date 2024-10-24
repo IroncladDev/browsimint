@@ -1,6 +1,6 @@
-import { messageInternalCall } from "@/lib/schemas/messages"
-import { LocalStore } from "@/lib/storage"
-import { MessageInternalCall } from "@/types"
+import { messageInternalCall } from "@common/schemas/messages"
+import { LocalStore } from "@common/storage"
+import { MessageInternalCall } from "@common/types"
 import { Duration, GatewayInfo, JSONObject } from "@fedimint/core-web"
 import { wallet } from "../state"
 

@@ -1,5 +1,5 @@
-import { extensionMessage } from "@/lib/schemas/messages"
-import { ExtensionMessage } from "@/types"
+import { extensionMessage } from "@common/schemas/messages"
+import { ExtensionMessage } from "@common/types"
 import browser from "webextension-polyfill"
 
 export async function sendExtensionMessage(msg: ExtensionMessage) {

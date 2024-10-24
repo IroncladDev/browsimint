@@ -1,5 +1,5 @@
-import { messageModuleCall, windowAck } from "@/lib/schemas/messages"
-import { MessageModuleCall, WindowAck } from "@/types"
+import { messageModuleCall, windowAck } from "@common/schemas/messages"
+import { MessageModuleCall, WindowAck } from "@common/types"
 import { z } from "zod"
 
 export function postWindowMessage(

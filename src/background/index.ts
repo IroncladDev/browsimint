@@ -1,5 +1,5 @@
-import { sendExtensionMessage } from "@/lib/messaging/extension"
-import { LocalStore } from "@/lib/storage"
+import { sendExtensionMessage } from "@common/messaging/extension"
+import { LocalStore } from "@common/storage"
 import browser from "webextension-polyfill"
 import { handleMessage } from "./listeners/message"
 import { handleStorageChange } from "./listeners/storage"

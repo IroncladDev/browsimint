@@ -1,16 +1,16 @@
-import { Button } from "@/components/ui/button"
-import Flex from "@/components/ui/flex"
-import { Input } from "@/components/ui/input"
+import { CreateBolt11Response } from "@fedimint/core-web"
+import { useEffect, useState } from "react"
+import { Button } from "../components/ui/button"
+import Flex from "../components/ui/flex"
+import { Input } from "../components/ui/input"
 import {
   Sheet,
   SheetContent,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
-import Text from "@/components/ui/text"
-import { useToast } from "@/components/ui/use-toast"
-import { CreateBolt11Response } from "@fedimint/core-web"
-import { useEffect, useState } from "react"
+} from "../components/ui/sheet"
+import Text from "../components/ui/text"
+import { useToast } from "../components/ui/use-toast"
 import { makeInternalCall } from "../messaging"
 
 export default function ReceiveLN() {

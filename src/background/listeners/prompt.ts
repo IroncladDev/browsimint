@@ -1,5 +1,5 @@
-import { messagePromptChoice } from "@/lib/schemas/messages"
-import { MessagePromptChoice } from "@/types"
+import { messagePromptChoice } from "@common/schemas/messages"
+import { MessagePromptChoice } from "@common/types"
 import browser from "webextension-polyfill"
 import { openPrompt, releasePromptMutex, setWindowPrompt } from "../state"
 

@@ -1,6 +1,6 @@
-import { sendExtensionMessage } from "@/lib/messaging/extension"
-import { FederationItemSchema, LocalStore, StorageKey } from "@/lib/storage"
-import { ExtensionMessage } from "@/types"
+import { sendExtensionMessage } from "@common/messaging/extension"
+import { FederationItemSchema, LocalStore, StorageKey } from "@common/storage"
+import { ExtensionMessage } from "@common/types"
 import {
   createContext,
   Dispatch,

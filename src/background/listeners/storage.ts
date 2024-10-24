@@ -1,11 +1,11 @@
 import { FedimintWallet } from "@fedimint/core-web"
 import { Storage } from "webextension-polyfill"
-import { sendExtensionMessage } from "../../lib/messaging/extension"
+import { sendExtensionMessage } from "../../common/messaging/extension"
 import {
   FederationItemSchema,
   federationSchema,
   LocalStore,
-} from "../../lib/storage"
+} from "../../common/storage"
 import {
   balanceSubscription,
   setUnsubscribeBalance,

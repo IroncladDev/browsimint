@@ -3,14 +3,14 @@ import {
   permissions,
   promptHeight,
   promptWidth,
-} from "@/lib/constants"
-import { sendExtensionMessage } from "@/lib/messaging/extension"
-import { extensionMessage, messageModuleCall } from "@/lib/schemas/messages"
+} from "@common/constants"
+import { sendExtensionMessage } from "@common/messaging/extension"
+import { extensionMessage, messageModuleCall } from "@common/schemas/messages"
 import {
   ExtensionMessage,
   MessageModuleCall,
   MessagePromptChoice,
-} from "@/types"
+} from "@common/types"
 import browser from "webextension-polyfill"
 import { initWallet } from ".."
 import handleFedimintMessage, { FedimintParams } from "../handlers/fedimint"

@@ -1,4 +1,4 @@
-import { EXTENSION_NAME, windowModule } from "@/lib/constants"
+import { EXTENSION_NAME, windowModule } from "@common/constants"
 import { z } from "zod"
 
 // Type of messages that can be passed to the window and background script

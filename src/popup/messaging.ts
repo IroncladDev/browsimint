@@ -1,5 +1,5 @@
-import { sendExtensionMessage } from "@/lib/messaging/extension"
-import { MessageInternalCall } from "@/types"
+import { sendExtensionMessage } from "@common/messaging/extension"
+import { MessageInternalCall } from "@common/types"
 
 export async function makeInternalCall<T>({
   params,

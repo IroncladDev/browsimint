@@ -1,5 +1,5 @@
-import { FederationItemSchema } from "@/lib/storage"
-import { WindowModuleKind } from "@/types"
+import { FederationItemSchema } from "@common/storage"
+import { WindowModuleKind } from "@common/types"
 
 // Prompt Window Dimensions
 export const promptWidth = 360

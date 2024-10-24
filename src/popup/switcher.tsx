@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button"
-import Flex from "@/components/ui/flex"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import Text from "@/components/ui/text"
-import { federations } from "@/lib/constants"
-import { FederationItemSchema, LocalStore } from "@/lib/storage"
+import { federations } from "@common/constants"
+import { FederationItemSchema, LocalStore } from "@common/storage"
 import { Check, ChevronDown } from "lucide-react"
 import { useState } from "react"
 import { styled } from "react-tailwind-variants"
+import { Button } from "./components/ui/button"
+import Flex from "./components/ui/flex"
+import { Sheet, SheetContent, SheetTrigger } from "./components/ui/sheet"
+import Text from "./components/ui/text"
 import { useAppState } from "./state"
 
 export default function Switcher() {
