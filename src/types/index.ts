@@ -1,62 +1,30 @@
-import { FedimintParams } from "../background/handlers/fedimint";
-import { InternalParams } from "../background/listeners/internal";
-import { NostrParams } from "../background/handlers/nostr";
-import { WeblnParams } from "../background/handlers/webln";
+import { z } from "zod"
+import { windowModule } from "../lib/constants"
+import {
+  extensionMessage,
+  messageBalanceRequest,
+  messageBalanceUpdate,
+  messageInternalCall,
+  messageModuleCall,
+  messagePromptAccept,
+  messagePromptChoice,
+  messagePromptReject,
+  windowAck,
+} from "../lib/schemas/messages"
 
-export const windowModule = ["fedimint", "nostr", "webln"] as const;
-export type WindowModuleKind = (typeof windowModule)[number];
+// Window module kind
+export type WindowModuleKind = (typeof windowModule)[number]
 
-export type MethodParams = WeblnParams | NostrParams | FedimintParams;
+export type MessagePromptReject = z.infer<typeof messagePromptReject> // Rejecting a prompt from the popup
+export type MessagePromptAccept = z.infer<typeof messagePromptAccept> // Accepting a prompt from the popup
+export type MessagePromptChoice = z.infer<typeof messagePromptChoice> // Reject or accept a prompt from the popup
+export type MessageModuleCall = z.infer<typeof messageModuleCall> // Calling a window injection method
+export type MessageInternalCall = z.infer<typeof messageInternalCall> // Internal call from popup to background
+export type MessageBalanceUpdate = z.infer<typeof messageBalanceUpdate> // Balance update from background to popup
+export type MessageBalanceRequest = z.infer<typeof messageBalanceRequest> // Request balance from popup
 
-export type PromptMessageRejected<T extends MethodParams = MethodParams> =
-  | {
-      type: "prompt";
-      ext: "fedimint-web";
-      prompt: true;
-      accept: false;
-    } & Pick<T, "method">;
-export type PromptMessageAccepted<T extends MethodParams = MethodParams> =
-  | {
-      type: "prompt";
-      ext: "fedimint-web";
-      prompt: true;
-      accept: true;
-    } & T;
+// Any message
+export type ExtensionMessage = z.infer<typeof extensionMessage>
 
-export type PromptMessage<T extends MethodParams = MethodParams> =
-  | PromptMessageRejected<T>
-  | PromptMessageAccepted<T>;
-
-export interface ModuleMethodCall {
-  id: string;
-  type: "methodCall";
-  ext: "fedimint-web";
-  module: WindowModuleKind;
-  method: string;
-  params: any;
-  windowPos: [number, number];
-}
-
-export type InternalCall = {
-  type: "internalCall";
-  ext: "fedimint-web";
-} & InternalParams;
-
-export type BalanceUpdate = {
-  type: "balance";
-  ext: "fedimint-web";
-  balance: number;
-}
-
-export type BalanceRequest = {
-  type: "balanceRequest";
-  ext: "fedimint-web";
-}
-
-export type WindowMessage = ModuleMethodCall | PromptMessage | InternalCall | BalanceUpdate | BalanceRequest;
-
-export enum PermissionLevel {
-  None = 0,
-  Signature = 1,
-  Payment = 2,
-}
+// Window acknowledgement message
+export type WindowAck = z.infer<typeof windowAck>

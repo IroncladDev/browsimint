@@ -1,14 +1,15 @@
-import { styled } from "react-tailwind-variants";
-import { approveRequest, denyRequest } from "./send-message";
-import { Button } from "../components/ui/button";
-import Flex from "../components/ui/flex";
-import Text from "../components/ui/text";
-import browser from "webextension-polyfill";
-import { windowModule, WindowModuleKind } from "../types";
-import { useEffect, useState } from "react";
-import { Input } from "../components/ui/input";
-import gr from "../lib/gradients";
-import colors from "tailwindcss/colors";
+import { Button } from "@/components/ui/button"
+import Flex from "@/components/ui/flex"
+import { Input } from "@/components/ui/input"
+import Text from "@/components/ui/text"
+import { windowModule } from "@/lib/constants"
+import gr from "@/lib/gradients"
+import { sendExtensionMessage } from "@/lib/messaging/extension"
+import { WindowModuleKind } from "@/types"
+import { useEffect, useState } from "react"
+import { styled } from "react-tailwind-variants"
+import colors from "tailwindcss/colors"
+import browser from "webextension-polyfill"
 
 const titleKeys: Record<WindowModuleKind, { [key: string]: string }> = {
   fedimint: {
@@ -21,43 +22,43 @@ const titleKeys: Record<WindowModuleKind, { [key: string]: string }> = {
     makeInvoice: "Create Invoice",
     sendPayment: "Send Payment",
   },
-} as const;
+} as const
 
 export default function Prompt() {
-  const [amount, setAmount] = useState<number>(0);
-  const [description, setDescription] = useState<string>("");
-  const [loading, setLoading] = useState(false);
-  const url = new URL(window.location.href);
+  const [amount, setAmount] = useState<number>(0)
+  const [description, setDescription] = useState<string>("")
+  const [loading, setLoading] = useState(false)
+  const url = new URL(window.location.href)
 
-  const params = new URLSearchParams(url.search);
+  const params = new URLSearchParams(url.search)
 
-  const method = params.get("method");
-  const methodParams = params.get("params");
-  const mod = params.get("module") as WindowModuleKind | null;
+  const method = params.get("method")
+  const methodParams = params.get("params")
+  const mod = params.get("module") as WindowModuleKind | null
 
-  const parsedParams = methodParams === null ? null : JSON.parse(methodParams);
+  const parsedParams = methodParams === null ? null : JSON.parse(methodParams)
 
   if (!windowModule.includes((mod ?? "") as any) || method === null)
-    return <Container>Error</Container>;
+    return <Container>Error</Container>
 
-  const titleModule = titleKeys[mod as WindowModuleKind];
+  const titleModule = titleKeys[mod as WindowModuleKind]
 
-  let contentComponent: React.ReactNode = null;
+  let contentComponent: React.ReactNode = null
 
   useEffect(() => {
     if (mod === "webln" && method === "makeInvoice") {
       const args = parsedParams as {
-        amount?: string | number;
-        defaultAmount?: string | number;
-        minimumAmount?: string | number;
-        maximumAmount?: string | number;
-      };
+        amount?: string | number
+        defaultAmount?: string | number
+        minimumAmount?: string | number
+        maximumAmount?: string | number
+      }
 
       setAmount(
-        Number(args?.amount || args?.defaultAmount || args?.minimumAmount || 0)
-      );
+        Number(args?.amount || args?.defaultAmount || args?.minimumAmount || 0),
+      )
     }
-  }, [mod, method, parsedParams]);
+  }, [mod, method, parsedParams])
 
   if (mod === "fedimint") {
     if (method === "generateEcash") {
@@ -84,13 +85,13 @@ export default function Prompt() {
             </Flex>
           ))}
         </Flex>
-      );
+      )
     } else if (method === "receiveEcash") {
       contentComponent = (
         <Text size="sm" className="text-gray-500 break-all w-full" multiline>
           {parsedParams as string}
         </Text>
-      );
+      )
     }
   } else if (mod === "nostr") {
     if (method === "signEvent") {
@@ -117,17 +118,17 @@ export default function Prompt() {
             </Flex>
           ))}
         </Flex>
-      );
+      )
     }
   } else if (mod === "webln") {
     if (method === "makeInvoice") {
       const args = parsedParams as {
-        amount?: string | number;
-        defaultAmount?: string | number;
-        minimumAmount?: string | number;
-        maximumAmount?: string | number;
-        defaultMemo?: string;
-      };
+        amount?: string | number
+        defaultAmount?: string | number
+        minimumAmount?: string | number
+        maximumAmount?: string | number
+        defaultMemo?: string
+      }
 
       contentComponent = (
         <Flex col gap={2} className="w-full">
@@ -138,7 +139,7 @@ export default function Prompt() {
               value={amount}
               min={args?.minimumAmount ? Number(args.minimumAmount) : undefined}
               max={args?.maximumAmount ? Number(args.maximumAmount) : undefined}
-              onChange={(e) => setAmount(Number(e.target.value))}
+              onChange={e => setAmount(Number(e.target.value))}
               type="number"
               inputMode="numeric"
               className="w-full"
@@ -153,18 +154,18 @@ export default function Prompt() {
                 placeholder="Memo..."
                 rows={3}
                 value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                onChange={e => setDescription(e.target.value)}
               ></textarea>
             </Input>
           </Flex>
         </Flex>
-      );
+      )
     } else if (method === "sendPayment") {
       contentComponent = (
         <Text size="sm" className="text-gray-500 break-all w-full" multiline>
           {JSON.stringify(parsedParams)}
         </Text>
-      );
+      )
     }
   }
 
@@ -179,8 +180,8 @@ export default function Prompt() {
             colors.sky["700"] + "f6",
             colors.sky["800"] + "e8 20%",
             "transparent 60%",
-            "transparent"
-          )
+            "transparent",
+          ),
         ),
       }}
     >
@@ -214,7 +215,12 @@ export default function Prompt() {
         <Flex gap={2} align="center">
           <Button
             onClick={() => {
-              denyRequest({ method: method as any });
+              sendExtensionMessage({
+                type: "prompt",
+                accept: false,
+                method,
+                ext: "fedimint-web",
+              })
             }}
             variant="secondary"
             fullWidth
@@ -224,18 +230,27 @@ export default function Prompt() {
           </Button>
           <Button
             onClick={() => {
-              setLoading(true);
+              setLoading(true)
 
               if (mod === "webln" && method === "makeInvoice") {
-                approveRequest({
+                sendExtensionMessage({
+                  type: "prompt",
+                  ext: "fedimint-web",
+                  accept: true,
                   method,
                   params: {
                     amount,
                     description,
                   },
-                });
+                })
               } else {
-                approveRequest({ method: method as any, params: parsedParams });
+                sendExtensionMessage({
+                  type: "prompt",
+                  accept: true,
+                  method: method as any,
+                  params: parsedParams,
+                  ext: "fedimint-web",
+                })
               }
             }}
             fullWidth
@@ -247,9 +262,9 @@ export default function Prompt() {
         </Flex>
       </Flex>
     </Flex>
-  );
+  )
 }
 
 const Container = styled("div", {
   base: "flex flex-col items-center justify-center h-screen",
-});
+})

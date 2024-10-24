@@ -1,21 +1,21 @@
-import Switcher from "./switcher";
-import Flex from "../components/ui/flex";
-import Text from "../components/ui/text";
-import { useAppState } from "./state";
-import IntroOnboarding from "./onboarding/intro";
-import FederationsOnboarding from "./onboarding/federations";
-import NostrOnboarding from "./onboarding/nostr";
-import { styled } from "react-tailwind-variants";
-import ReceiveLN from "./widgets/receive-ln";
-import SendLN from "./widgets/send-ln";
-import ReceiveEcash from "./widgets/receive-ecash";
-import SendEcash from "./widgets/send-ecash";
-import { motion } from "framer-motion";
-import gr from "../lib/gradients";
-import colors from "tailwindcss/colors";
+import Flex from "@/components/ui/flex"
+import Text from "@/components/ui/text"
+import gr from "@/lib/gradients"
+import { motion } from "framer-motion"
+import { styled } from "react-tailwind-variants"
+import colors from "tailwindcss/colors"
+import FederationsOnboarding from "./onboarding/federations"
+import IntroOnboarding from "./onboarding/intro"
+import NostrOnboarding from "./onboarding/nostr"
+import { useAppState } from "./state"
+import Switcher from "./switcher"
+import ReceiveEcash from "./widgets/receive-ecash"
+import ReceiveLN from "./widgets/receive-ln"
+import SendEcash from "./widgets/send-ecash"
+import SendLN from "./widgets/send-ln"
 
 export default function Popup() {
-  const state = useAppState();
+  const state = useAppState()
 
   const background = gr.merge(
     gr.radial(
@@ -23,24 +23,24 @@ export default function Popup() {
       colors.sky["700"] + "f6",
       colors.sky["800"] + "e8 20%",
       "transparent 70%",
-      "transparent"
-    )
-  );
+      "transparent",
+    ),
+  )
 
   if (
     state.onboardingStep === 0 &&
     state.federations.length === 0 &&
     state.nostrSecretKey === null
   ) {
-    return <IntroOnboarding />;
+    return <IntroOnboarding />
   }
 
   if (state.onboardingStep === 1 && state.federations.length === 0) {
-    return <FederationsOnboarding />;
+    return <FederationsOnboarding />
   }
 
   if (state.onboardingStep === 2 && state.nostrSecretKey === null) {
-    return <NostrOnboarding />;
+    return <NostrOnboarding />
   }
 
   return (
@@ -77,13 +77,13 @@ export default function Popup() {
         </Fieldset>
       </motion.div>
     </Flex>
-  );
+  )
 }
 
 const Fieldset = styled("fieldset", {
   base: "flex flex-col gap-2 px-2 pt-1 pb-2 rounded-lg border border-gray-600/50 bg-gray-900/50",
-});
+})
 
 const Legend = styled("legend", {
   base: "text-white text-sm font-medium",
-});
+})

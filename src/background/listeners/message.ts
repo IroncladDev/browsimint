@@ -1,16 +1,21 @@
-import { initWallet } from "..";
-import { permissions, promptHeight, promptWidth } from "../../lib/constants";
 import {
-  BalanceUpdate,
-  ModuleMethodCall,
   PermissionLevel,
-  PromptMessage,
-  WindowMessage,
-} from "../../types";
-import handleFedimintMessage, { FedimintParams } from "../handlers/fedimint";
-import handleInternalMessage from "./internal";
-import handleNostrMessage, { NostrParams } from "../handlers/nostr";
-import handleWeblnMessage, { WeblnParams } from "../handlers/webln";
+  permissions,
+  promptHeight,
+  promptWidth,
+} from "@/lib/constants"
+import { sendExtensionMessage } from "@/lib/messaging/extension"
+import { extensionMessage, messageModuleCall } from "@/lib/schemas/messages"
+import {
+  ExtensionMessage,
+  MessageModuleCall,
+  MessagePromptChoice,
+} from "@/types"
+import browser from "webextension-polyfill"
+import { initWallet } from ".."
+import handleFedimintMessage, { FedimintParams } from "../handlers/fedimint"
+import handleNostrMessage, { NostrParams } from "../handlers/nostr"
+import handleWeblnMessage, { WeblnParams } from "../handlers/webln"
 import {
   openPrompt,
   promptMutex,
@@ -18,60 +23,62 @@ import {
   setReleasePromptMutex,
   setWindowPrompt,
   wallet,
-} from "../state";
-import browser from "webextension-polyfill";
+} from "../state"
+import handleInternalMessage from "./internal"
 
-export async function handleMessage(message: WindowMessage, sender: any) {
-  if (message.ext !== "fedimint-web") return;
+export async function handleMessage(msg: ExtensionMessage, sender: any) {
+  const message = extensionMessage.parse(msg)
 
   try {
     switch (message.type) {
       case "prompt":
-        if (!message.accept || !openPrompt) return;
+        if (!message.accept || !openPrompt) return
 
-        openPrompt.resolve(message);
-        setWindowPrompt(null);
-        releasePromptMutex();
+        openPrompt.resolve(message)
+        setWindowPrompt(null)
+        releasePromptMutex()
 
         if (sender) {
-          browser.windows.remove(sender.tab.windowId);
+          browser.windows.remove(sender.tab.windowId)
         }
-        break;
+        break
       case "methodCall":
-        const methodRes = await handleContentScriptMessage(message);
+        const methodRes = await handleContentScriptMessage(message)
 
-        return { success: true, data: methodRes };
+        return { success: true, data: methodRes }
       case "internalCall":
-        const internalRes = await handleInternalMessage(message);
+        const internalRes = await handleInternalMessage(message)
 
-        return { success: true, data: internalRes };
+        return { success: true, data: internalRes }
       case "balanceRequest":
         if (wallet.isOpen()) {
-          browser.runtime.sendMessage({
+          sendExtensionMessage({
             ext: "fedimint-web",
             type: "balance",
             balance: await wallet.balance.getBalance(),
-          } as BalanceUpdate);
+          })
         }
       default:
-        return;
+        return
     }
   } catch (err) {
-    return { success: false, message: (err as Error).message };
+    return { success: false, message: (err as Error).message }
   }
 }
 
-async function handleContentScriptMessage({
-  module,
-  method,
-  windowPos,
-  params: messageParams,
-}: ModuleMethodCall) {
+async function handleContentScriptMessage(msg: MessageModuleCall) {
+  const {
+    module,
+    method,
+    windowPos,
+    params: messageParams,
+  } = messageModuleCall.parse(msg)
+
   // Prompt URL may change original params (e.g. webln.creatInvoice)
-  let params = messageParams;
+  let params = messageParams
 
   try {
-    await initWallet();
+    await initWallet()
 
     let result = {
       type: "prompt",
@@ -80,56 +87,58 @@ async function handleContentScriptMessage({
       accept: true,
       method,
       params,
-    } as PromptMessage;
+    } as MessagePromptChoice
 
     if (permissions[module][method] !== PermissionLevel.None) {
-      setReleasePromptMutex(await promptMutex.acquire());
+      setReleasePromptMutex(await promptMutex.acquire())
 
-      result = await new Promise<PromptMessage>(async (resolve, reject) => {
-        setWindowPrompt({ resolve, reject });
+      result = await new Promise<MessagePromptChoice>(
+        async (resolve, reject) => {
+          setWindowPrompt({ resolve, reject })
 
-        let queryParams = new URLSearchParams({
-          params: JSON.stringify(params),
-          module,
-          method,
-        });
+          let queryParams = new URLSearchParams({
+            params: JSON.stringify(params),
+            module,
+            method,
+          })
 
-        const win = await browser.windows.create({
-          url: `${browser.runtime.getURL(
-            "src/prompt.html"
-          )}?${queryParams.toString()}`,
-          type: "popup",
-          width: promptWidth,
-          height: promptHeight,
-          top: Math.round(windowPos[1]),
-          left: Math.round(windowPos[0]),
-        });
+          const win = await browser.windows.create({
+            url: `${browser.runtime.getURL(
+              "src/prompt.html",
+            )}?${queryParams.toString()}`,
+            type: "popup",
+            width: promptWidth,
+            height: promptHeight,
+            top: Math.round(windowPos[1]),
+            left: Math.round(windowPos[0]),
+          })
 
-        function listenForClose(id?: number) {
-          if (id === win.id) {
-            resolve({
-              type: "prompt",
-              ext: "fedimint-web",
-              prompt: true,
-              accept: false,
-              method,
-            } as PromptMessage);
-            browser.windows.onRemoved.removeListener(listenForClose);
+          function listenForClose(id?: number) {
+            if (id === win.id) {
+              resolve({
+                type: "prompt",
+                ext: "fedimint-web",
+                prompt: true,
+                accept: false,
+                method,
+              } as MessagePromptChoice)
+              browser.windows.onRemoved.removeListener(listenForClose)
+            }
           }
-        }
 
-        browser.windows.onRemoved.addListener(listenForClose);
-      });
+          browser.windows.onRemoved.addListener(listenForClose)
+        },
+      )
     }
 
     // TODO: better error handling
-    if (!result.accept) throw new Error("denied");
+    if (!result.accept) throw new Error("denied")
 
-    params = result.params;
+    params = result.params
   } catch (err) {
-    releasePromptMutex();
+    releasePromptMutex()
 
-    throw new Error((err as Error).message);
+    throw new Error((err as Error).message)
   }
 
   if (module === "fedimint") {
@@ -138,20 +147,20 @@ async function handleContentScriptMessage({
         method,
         params,
       } as FedimintParams,
-      wallet
-    );
+      wallet,
+    )
   } else if (module === "nostr") {
     return await handleNostrMessage({
       method,
       params,
-    } as NostrParams);
+    } as NostrParams)
   } else if (module === "webln") {
     return await handleWeblnMessage(
       {
         method,
         params,
       } as WeblnParams,
-      wallet
-    );
+      wallet,
+    )
   }
 }

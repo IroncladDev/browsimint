@@ -1,55 +1,16 @@
-import {
-  Duration,
-  GatewayInfo,
-  JSONObject,
-} from "@fedimint/core-web";
-import { LocalStore } from "../../lib/storage";
-import { InternalCall } from "../../types";
-import { wallet } from "../state";
+import { messageInternalCall } from "@/lib/schemas/messages"
+import { LocalStore } from "@/lib/storage"
+import { MessageInternalCall } from "@/types"
+import { Duration, GatewayInfo, JSONObject } from "@fedimint/core-web"
+import { wallet } from "../state"
 
-export type InternalParams =
-  | {
-      method: "payInvoice";
-      params: {
-        invoice: string;
-        gatewayInfo?: GatewayInfo;
-        extraMeta?: JSONObject;
-      };
-    }
-  | {
-      method: "createInvoice";
-      params: {
-        amount: number;
-        description: string;
-        expiryTime?: number;
-        extraMeta?: JSONObject;
-        gatewayInfo?: GatewayInfo;
-      };
-    }
-  | {
-      method: "spendEcash";
-      params: {
-        minAmount: number;
-        tryCancelAfter?: number | Duration;
-        includeInvite?: boolean;
-        extraMeta?: JSONObject;
-      };
-    }
-  | {
-      method: "redeemEcash";
-      params: {
-        notes: string;
-      };
-    };
+export default async function handleInternalMessage(msg: MessageInternalCall) {
+  const { method, params } = messageInternalCall.parse(msg)
 
-export default async function handleInternalMessage({
-  method,
-  params,
-}: InternalCall) {
-  const activeFederation = await LocalStore.getActiveFederation();
+  const activeFederation = await LocalStore.getActiveFederation()
 
   if (activeFederation && !wallet.isOpen()) {
-    await wallet.open(activeFederation.id);
+    await wallet.open(activeFederation.id)
   }
 
   switch (method) {
@@ -57,26 +18,61 @@ export default async function handleInternalMessage({
       return await wallet.lightning.payInvoice(
         params.invoice,
         params.gatewayInfo,
-        params.extraMeta
-      );
+        params.extraMeta,
+      )
     case "createInvoice":
       return await wallet.lightning.createInvoice(
         params.amount,
         params.description,
         params.expiryTime,
         params.extraMeta,
-        params.gatewayInfo
-      );
+        params.gatewayInfo,
+      )
     case "spendEcash":
       return await wallet.mint.spendNotes(
         params.minAmount,
         params.tryCancelAfter,
         params.includeInvite,
-        params.extraMeta
-      );
+        params.extraMeta,
+      )
     case "redeemEcash":
-      await wallet.mint.redeemEcash(params.notes);
+      await wallet.mint.redeemEcash(params.notes)
 
-      return await wallet.mint.parseNotes(params.notes);
+      return await wallet.mint.parseNotes(params.notes)
   }
 }
+
+export type InternalParams =
+  | {
+      method: "payInvoice"
+      params: {
+        invoice: string
+        gatewayInfo?: GatewayInfo
+        extraMeta?: JSONObject
+      }
+    }
+  | {
+      method: "createInvoice"
+      params: {
+        amount: number
+        description: string
+        expiryTime?: number
+        extraMeta?: JSONObject
+        gatewayInfo?: GatewayInfo
+      }
+    }
+  | {
+      method: "spendEcash"
+      params: {
+        minAmount: number
+        tryCancelAfter?: number | Duration
+        includeInvite?: boolean
+        extraMeta?: JSONObject
+      }
+    }
+  | {
+      method: "redeemEcash"
+      params: {
+        notes: string
+      }
+    }

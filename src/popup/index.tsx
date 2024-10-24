@@ -1,9 +1,9 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import Popup from "./content";
-import { AppStateProvider } from "./state";
-import { ToastProvider } from "../components/ui/toast";
-import { Toaster } from "../components/ui/toaster";
+import { ToastProvider } from "@/components/ui/toast"
+import { Toaster } from "@/components/ui/toaster"
+import React from "react"
+import ReactDOM from "react-dom/client"
+import Popup from "./content"
+import { AppStateProvider } from "./state"
 
 ReactDOM.createRoot(document.body).render(
   <React.StrictMode>
@@ -13,5 +13,5 @@ ReactDOM.createRoot(document.body).render(
       </AppStateProvider>
       <Toaster />
     </ToastProvider>
-  </React.StrictMode>
-);
+  </React.StrictMode>,
+)

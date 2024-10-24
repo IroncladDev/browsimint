@@ -1,18 +1,16 @@
-import { InternalCall } from "../types";
-import browser from "webextension-polyfill";
+import { sendExtensionMessage } from "@/lib/messaging/extension"
+import { MessageInternalCall } from "@/types"
 
 export async function makeInternalCall<T>({
   params,
   method,
-}: Pick<InternalCall, "method" | "params">): Promise<
+}: Pick<MessageInternalCall, "method" | "params">): Promise<
   { success: true; data: T } | { success: false; message: string }
 > {
-  const message: InternalCall = {
+  return await sendExtensionMessage({
     type: "internalCall",
     ext: "fedimint-web",
-    params: params as any,
-    method: method as any,
-  };
-
-  return await browser.runtime.sendMessage(message);
+    params: params,
+    method: method,
+  })
 }

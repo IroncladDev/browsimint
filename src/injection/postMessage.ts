@@ -1,49 +1,61 @@
-import { ModuleMethodCall, WindowModuleKind } from "../types";
-import { PromiseQueue } from "./queue";
+import { postWindowMessage } from "../lib/messaging/window"
+import { messageModuleCall } from "../lib/schemas/messages"
+import { MessageModuleCall, WindowModuleKind } from "../types"
+import { PromiseQueue } from "./queue"
 
-const queue = new PromiseQueue();
+const queue = new PromiseQueue()
 
-export function postMessage<
-  U extends { [key: string]: [any, any] },
-  T extends keyof U
->(method: T, params: U[T][0], module: WindowModuleKind): Promise<U[T][1]> {
+export function postMessage(
+  method: string,
+  params: any,
+  module: WindowModuleKind,
+): Promise<any> {
   return queue.add(
     () =>
       new Promise((resolve, reject) => {
-        const id = Math.random().toString().slice(2);
+        const id = Math.random().toString().slice(2)
 
-        const message: ModuleMethodCall = {
-          type: "methodCall",
-          id,
-          ext: "fedimint-web",
-          module,
-          method: method as string,
-          params,
-          windowPos: [0, 0],
-        };
+        postWindowMessage(
+          {
+            type: "methodCall",
+            id,
+            ext: "fedimint-web",
+            module,
+            method,
+            params,
+            windowPos: [0, 0],
+          },
+          "*",
+        )
 
-        window.postMessage(message, "*");
-
-        function handleWindowMessage(messageEvent: MessageEvent) {
-          if (
-            !messageEvent.data ||
-            !messageEvent.data.response ||
-            messageEvent.data.ext !== "fedimint-web" ||
-            messageEvent.data.id !== id
-          ) {
-            return;
+        function handleWindowMessage(
+          messageEvent: MessageEvent<{
+            request: MessageModuleCall
+            response:
+              | { success: false; message: string }
+              | { success: true; data: any }
+          }>,
+        ) {
+          if (!messageEvent.data || !messageEvent.data.response) {
+            return
           }
+
+          const { success: isValid } = messageModuleCall.safeParse(
+            messageEvent.data.request,
+          )
+
+          if (!isValid) return
 
           if (messageEvent.data.response.success) {
-            resolve(messageEvent.data.response.data);
+            resolve(messageEvent.data.response.data)
           } else {
-            reject(new Error(messageEvent.data.response.message));
+            reject(new Error(messageEvent.data.response.message))
           }
 
-          window.removeEventListener("message", handleWindowMessage);
+          window.removeEventListener("message", handleWindowMessage)
         }
 
-        window.addEventListener("message", handleWindowMessage as any);
-      })
-  );
+        window.addEventListener("message", handleWindowMessage)
+      }),
+  )
 }

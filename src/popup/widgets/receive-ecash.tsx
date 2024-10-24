@@ -1,56 +1,56 @@
+import { Button } from "@/components/ui/button"
+import Flex from "@/components/ui/flex"
+import { Input } from "@/components/ui/input"
 import {
   Sheet,
   SheetContent,
   SheetTitle,
   SheetTrigger,
-} from "../../components/ui/sheet";
-import { Button } from "../../components/ui/button";
-import Flex from "../../components/ui/flex";
-import { useToast } from "../../components/ui/use-toast";
-import Text from "../../components/ui/text";
-import { useEffect, useState } from "react";
-import { Input } from "../../components/ui/input";
-import { makeInternalCall } from "../messaging";
+} from "@/components/ui/sheet"
+import Text from "@/components/ui/text"
+import { useToast } from "@/components/ui/use-toast"
+import { useEffect, useState } from "react"
+import { makeInternalCall } from "../messaging"
 
 export default function ReceiveEcash() {
-  const [notes, setNotes] = useState("");
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
+  const [notes, setNotes] = useState("")
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const { toast } = useToast()
 
   const reset = () => {
-    setNotes("");
-    setLoading(false);
-  };
+    setNotes("")
+    setLoading(false)
+  }
 
   const handleRedeemEcash = async () => {
-    setLoading(true);
+    setLoading(true)
 
     const res = await makeInternalCall<number>({
       method: "redeemEcash",
       params: {
         notes,
       },
-    });
+    })
 
     if (res.success) {
       toast({
         title: `Redeemed ${Math.round(res.data / 1000)} sats of ecash notes`,
-      });
+      })
 
-      reset();
-      setOpen(false);
+      reset()
+      setOpen(false)
     } else {
       toast({
         title: "Error redeeming notes",
         description: res.message,
-      });
+      })
     }
-  };
+  }
 
   useEffect(() => {
-    if (!open) reset();
-  }, [open]);
+    if (!open) reset()
+  }, [open])
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -67,7 +67,7 @@ export default function ReceiveEcash() {
             <Input asChild>
               <textarea
                 value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                onChange={e => setNotes(e.target.value)}
                 rows={2}
                 className="min-h-[60px]"
               />
@@ -77,5 +77,5 @@ export default function ReceiveEcash() {
         </Flex>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

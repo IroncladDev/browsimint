@@ -1,14 +1,14 @@
-import { motion, useMotionValue, useSpring } from "framer-motion";
-import { Button } from "../../components/ui/button";
-import Flex from "../../components/ui/flex";
-import Text from "../../components/ui/text";
-import { useAppState } from "../state";
-import { useCallback, useEffect } from "react";
-import gr from "../../lib/gradients";
-import colors from "tailwindcss/colors";
+import { Button } from "@/components/ui/button"
+import Flex from "@/components/ui/flex"
+import Text from "@/components/ui/text"
+import gr from "@/lib/gradients"
+import { motion, useMotionValue, useSpring } from "framer-motion"
+import { useCallback, useEffect } from "react"
+import colors from "tailwindcss/colors"
+import { useAppState } from "../state"
 
 export default function IntroOnboarding() {
-  const state = useAppState();
+  const state = useAppState()
 
   const gradient = useCallback((p: number) => {
     return gr.merge(
@@ -17,28 +17,28 @@ export default function IntroOnboarding() {
         colors.sky["700"] + "f6",
         colors.sky["800"] + "e8 20%",
         "transparent 70%",
-        "transparent"
+        "transparent",
       ),
       gr.rRadial(
         "circle at 50% 100%",
         ...gr.stack(
           ["#0000", `${25 + (1 - p) * 25}vh`],
-          [colors.gray["500"] + "55", `calc(${25 + (1 - p) * 25}vh + 2px)`]
-        )
-      )
-    );
-  }, []);
+          [colors.gray["500"] + "55", `calc(${25 + (1 - p) * 25}vh + 2px)`],
+        ),
+      ),
+    )
+  }, [])
 
-  const initialBackground = useMotionValue(gradient(0));
+  const initialBackground = useMotionValue(gradient(0))
   const background = useSpring(initialBackground, {
     damping: 25,
-  });
+  })
 
   useEffect(() => {
     if (background) {
-      background.set(gradient(1));
+      background.set(gradient(1))
     }
-  }, [gradient, background]);
+  }, [gradient, background])
 
   return (
     <Flex col gap={6} p={4} center className="h-screen" asChild>
@@ -60,5 +60,5 @@ export default function IntroOnboarding() {
         <Button onClick={() => state.setOnboardingStep(1)}>Get Started</Button>
       </motion.div>
     </Flex>
-  );
+  )
 }

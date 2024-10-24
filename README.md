@@ -13,6 +13,7 @@ TODO:
 
 - [ ] Nsec validation
 - [ ] Federation validation
+- [ ] Sat/msat conversion utils
 
 ## Future Considerations
 

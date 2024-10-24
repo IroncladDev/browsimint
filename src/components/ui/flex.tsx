@@ -1,4 +1,4 @@
-import { styled } from "react-tailwind-variants";
+import { styled } from "react-tailwind-variants"
 
 const Flex = styled("div", {
   base: "flex flex-row",
@@ -91,6 +91,6 @@ const Flex = styled("div", {
     noBasis: false,
     gap: 0,
   },
-});
+})
 
-export default Flex;
+export default Flex

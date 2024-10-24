@@ -1,23 +1,23 @@
-import { useCallback, useEffect, useState } from "react";
-import { Button } from "../../components/ui/button";
-import Flex from "../../components/ui/flex";
-import Text from "../../components/ui/text";
-import { useAppState } from "../state";
-import { Input } from "../../components/ui/input";
-import gr from "../../lib/gradients";
-import colors from "tailwindcss/colors";
-import { motion, useMotionValue, useSpring } from "framer-motion";
-import { LocalStore } from "../../lib/storage";
+import { Button } from "@/components/ui/button"
+import Flex from "@/components/ui/flex"
+import { Input } from "@/components/ui/input"
+import Text from "@/components/ui/text"
+import gr from "@/lib/gradients"
+import { LocalStore } from "@/lib/storage"
+import { motion, useMotionValue, useSpring } from "framer-motion"
+import { useCallback, useEffect, useState } from "react"
+import colors from "tailwindcss/colors"
+import { useAppState } from "../state"
 
 export default function NostrOnboarding() {
-  const [nsec, setNsec] = useState("");
-  const state = useAppState();
+  const [nsec, setNsec] = useState("")
+  const state = useAppState()
 
   const gradient = useCallback((p: number) => {
     const atSeventh = (n: number) =>
       `circle at ${
         Math.cos(((Math.PI * 2) / 7) * n) * 250 * p
-      }px ${Math.sin(((Math.PI * 2) / 7) * n) * 250 * p}px`;
+      }px ${Math.sin(((Math.PI * 2) / 7) * n) * 250 * p}px`
 
     return gr.merge(
       gr.radial(
@@ -25,70 +25,70 @@ export default function NostrOnboarding() {
         colors.sky["700"] + "d5",
         colors.sky["800"] + "a4 120px",
         "transparent 130px",
-        "transparent"
+        "transparent",
       ),
       gr.radial(
         atSeventh(0),
         colors.sky["700"] + "d5",
         colors.sky["800"] + "a4 50px",
         "transparent 60px",
-        "transparent"
+        "transparent",
       ),
       gr.radial(
         atSeventh(1),
         colors.sky["700"] + "d5",
         colors.sky["800"] + "a4 50px",
         "transparent 60px",
-        "transparent"
+        "transparent",
       ),
       gr.radial(
         atSeventh(2),
         colors.sky["700"] + "d5",
         colors.sky["800"] + "a4 50px",
         "transparent 60px",
-        "transparent"
+        "transparent",
       ),
       gr.radial(
         atSeventh(3),
         colors.sky["700"] + "d5",
         colors.sky["800"] + "a4 50px",
         "transparent 60px",
-        "transparent"
+        "transparent",
       ),
       gr.radial(
         atSeventh(4),
         colors.sky["700"] + "d5",
         colors.sky["800"] + "a4 50px",
         "transparent 60px",
-        "transparent"
+        "transparent",
       ),
       gr.radial(
         atSeventh(5),
         colors.sky["700"] + "d5",
         colors.sky["800"] + "a4 50px",
         "transparent 60px",
-        "transparent"
+        "transparent",
       ),
       gr.radial(
         atSeventh(6),
         colors.sky["700"] + "d5",
         colors.sky["800"] + "a4 50px",
         "transparent 60px",
-        "transparent"
-      )
-    );
-  }, []);
+        "transparent",
+      ),
+    )
+  }, [])
 
-  const initialBackground = useMotionValue(gradient(0));
+  const initialBackground = useMotionValue(gradient(0))
   const background = useSpring(initialBackground, {
     damping: 25,
-  });
+  })
 
   useEffect(() => {
     if (background) {
-      background.set(gradient(1));
+      background.set(gradient(1))
     }
-  }, [gradient, background]);
+  }, [gradient, background])
 
   return (
     <Flex col gap={2} p={4} className="h-screen" asChild>
@@ -106,7 +106,7 @@ export default function NostrOnboarding() {
             <Text>Nostr Secret Key</Text>
             <Input
               value={nsec}
-              onChange={(e) => setNsec(e.target.value)}
+              onChange={e => setNsec(e.target.value)}
               type="password"
               placeholder="nsec..."
             />
@@ -117,8 +117,8 @@ export default function NostrOnboarding() {
           <Button
             disabled={nsec.length === 0}
             onClick={() => {
-              LocalStore.setKey("nsec", nsec);
-              state.setOnboardingStep(3);
+              LocalStore.setKey("nsec", nsec)
+              state.setOnboardingStep(3)
             }}
           >
             Save
@@ -133,5 +133,5 @@ export default function NostrOnboarding() {
         </Flex>
       </motion.div>
     </Flex>
-  );
+  )
 }

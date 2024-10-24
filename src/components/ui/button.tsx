@@ -1,4 +1,4 @@
-import { styled } from "react-tailwind-variants";
+import { styled } from "react-tailwind-variants"
 
 export const Button = styled("button", {
   base: "border-2 rounded-lg px-4 py-1.5 outline-none basis-0 text-base transition-colors",
@@ -25,4 +25,4 @@ export const Button = styled("button", {
   defaultVariants: {
     variant: "primary",
   },
-});
+})
