@@ -1,4 +1,3 @@
-import { EXTENSION_NAME } from "@/common/constants"
 import { messageModuleCall } from "@/common/schemas/messages"
 import { sendExtensionMessage } from "@common/messaging/extension"
 import { postWindowMessage } from "@common/messaging/window"
@@ -34,7 +33,6 @@ window.addEventListener("message", async windowMsg => {
   const msg: MessageModuleCall = {
     type: "methodCall",
     id: message.id,
-    ext: EXTENSION_NAME,
     module: message.module,
     method: message.method,
     params: message.params,

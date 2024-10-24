@@ -1,4 +1,4 @@
-import { EXTENSION_NAME, windowModule } from "@common/constants"
+import { windowModule } from "@common/constants"
 import { z } from "zod"
 
 // Type of messages that can be passed to the window and background script
@@ -13,7 +13,6 @@ export const messageType = z.enum([
 // Base message schema
 export const messageBase = z.object({
   type: messageType,
-  ext: z.literal(EXTENSION_NAME),
 })
 
 // Prompt rejection message

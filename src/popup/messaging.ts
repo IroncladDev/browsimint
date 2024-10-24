@@ -1,4 +1,3 @@
-import { EXTENSION_NAME } from "@/common/constants"
 import { sendExtensionMessage } from "@common/messaging/extension"
 import { MessageInternalCall } from "@common/types"
 
@@ -10,8 +9,7 @@ export async function makeInternalCall<T>({
 > {
   return await sendExtensionMessage({
     type: "internalCall",
-    ext: EXTENSION_NAME,
-    params: params,
-    method: method,
+    params,
+    method,
   })
 }

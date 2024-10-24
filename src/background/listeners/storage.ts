@@ -12,7 +12,6 @@ import {
   setWallet,
   wallet,
 } from "../state"
-import { EXTENSION_NAME } from "@/common/constants"
 
 export async function handleStorageChange(
   changes: Record<string, Storage.StorageChange>,
@@ -37,7 +36,6 @@ export async function handleStorageChange(
         setUnsubscribeBalance(
           wallet.balance.subscribeBalance(async balance => {
             sendExtensionMessage({
-              ext: EXTENSION_NAME,
               type: "balance",
               balance,
             })

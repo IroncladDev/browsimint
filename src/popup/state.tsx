@@ -1,4 +1,3 @@
-import { EXTENSION_NAME } from "@/common/constants"
 import { extensionMessage } from "@/common/schemas/messages"
 import { sendExtensionMessage } from "@common/messaging/extension"
 import { FederationItemSchema, LocalStore, StorageKey } from "@common/storage"
@@ -82,7 +81,6 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     browser.runtime.onMessage.addListener(balanceListener)
 
     sendExtensionMessage({
-      ext: EXTENSION_NAME,
       type: "balanceRequest",
     })
 

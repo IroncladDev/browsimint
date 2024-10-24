@@ -2,7 +2,7 @@ import { Button } from "@/popup/components/ui/button"
 import Flex from "@/popup/components/ui/flex"
 import { Input } from "@/popup/components/ui/input"
 import Text from "@/popup/components/ui/text"
-import { EXTENSION_NAME, windowModule } from "@common/constants"
+import { windowModule } from "@common/constants"
 import gr from "@common/gradients"
 import { sendExtensionMessage } from "@common/messaging/extension"
 import { WindowModuleKind } from "@common/types"
@@ -199,7 +199,7 @@ export default function Prompt() {
             width={32}
             height={32}
           />
-          <Text size="xl">Fedimint Web</Text>
+          <Text size="xl">Browsimint</Text>
         </Flex>
         {/* switcher / nostr icon*/}
       </Flex>
@@ -219,7 +219,6 @@ export default function Prompt() {
                 type: "prompt",
                 accept: false,
                 method,
-                ext: EXTENSION_NAME,
               })
             }}
             variant="secondary"
@@ -235,7 +234,6 @@ export default function Prompt() {
               if (mod === "webln" && method === "makeInvoice") {
                 sendExtensionMessage({
                   type: "prompt",
-                  ext: EXTENSION_NAME,
                   accept: true,
                   method,
                   params: {
@@ -249,7 +247,6 @@ export default function Prompt() {
                   accept: true,
                   method: method as any,
                   params: parsedParams,
-                  ext: EXTENSION_NAME,
                 })
               }
             }}

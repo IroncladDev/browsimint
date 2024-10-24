@@ -49,7 +49,7 @@ export default function IntroOnboarding() {
         exit={{ opacity: 0 }}
       >
         <Text size="xl" weight="bold">
-          Fedimint Web
+          Browsimint
         </Text>
         <img
           src="/logo.svg"
