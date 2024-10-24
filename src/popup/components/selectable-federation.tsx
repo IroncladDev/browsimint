@@ -1,8 +1,8 @@
-import { FederationItemSchema } from "@/common/storage"
-import Flex from "../components/ui/flex"
-import Text from "../components/ui/text"
-import { styled } from "react-tailwind-variants";
-import { Check } from "lucide-react";
+import { FederationItemSchema } from "@/common/types"
+import Flex from "@common/ui/flex"
+import Text from "@common/ui/text"
+import { Check } from "lucide-react"
+import { styled } from "react-tailwind-variants"
 
 export default function SelectableFederation({
   name,
@@ -29,7 +29,9 @@ export default function SelectableFederation({
           className="rounded-lg border border-gray-800"
         />
         <Text className="text-white">{name}</Text>
-        <Flex grow>{network === "signet" && <Pill selected={selected}>Signet</Pill>}</Flex>
+        <Flex grow>
+          {network === "signet" && <Pill selected={selected}>Signet</Pill>}
+        </Flex>
         {selected && (
           <SelectedIndicator>
             <Check className="w-4 h-4" />

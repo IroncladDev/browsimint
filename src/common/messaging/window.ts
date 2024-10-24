@@ -1,4 +1,4 @@
-import { messageModuleCall, windowAck } from "@common/schemas/messages"
+import { messageModuleCall, windowAck } from "@common/schemas"
 import { MessageModuleCall, WindowAck } from "@common/types"
 import { z } from "zod"
 

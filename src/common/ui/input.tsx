@@ -1,6 +1,6 @@
 import { styled } from "react-tailwind-variants"
 
-export const Input = styled("input", {
+const Input = styled("input", {
   base: `
     rounded-lg text-sm font-medium transition-colors outline-none w-full text-white border-2 h-10 px-2 py-2
 
@@ -10,3 +10,5 @@ export const Input = styled("input", {
 
     focus:border-cyan-500/75 placeholder:text-gray-500`,
 })
+
+export default Input

@@ -5,7 +5,7 @@ import {
   promptWidth,
 } from "@common/constants"
 import { sendExtensionMessage } from "@common/messaging/extension"
-import { extensionMessage, messageModuleCall } from "@common/schemas/messages"
+import { extensionMessage, messageModuleCall } from "@common/schemas"
 import {
   ExtensionMessage,
   MessageModuleCall,

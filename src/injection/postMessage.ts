@@ -1,5 +1,5 @@
-import { postWindowMessage } from "../common/messaging/window"
-import { messageModuleCall } from "../common/schemas/messages"
+import { postWindowMessage } from "@common/messaging/window"
+import { messageModuleCall } from "@common/schemas"
 import { MessageModuleCall, WindowModuleKind } from "../common/types"
 import { PromiseQueue } from "./queue"
 
@@ -31,8 +31,8 @@ export function postMessage(
           messageEvent: MessageEvent<{
             request: MessageModuleCall
             response:
-            | { success: false; message: string }
-            | { success: true; data: any }
+              | { success: false; message: string }
+              | { success: true; data: any }
           }>,
         ) {
           if (!messageEvent.data || !messageEvent.data.response) {

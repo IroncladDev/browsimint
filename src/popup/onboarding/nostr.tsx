@@ -1,12 +1,12 @@
 import gr from "@common/gradients"
 import { LocalStore } from "@common/storage"
+import Button from "@common/ui/button"
+import Flex from "@common/ui/flex"
+import Input from "@common/ui/input"
+import Text from "@common/ui/text"
 import { motion, useMotionValue, useSpring } from "framer-motion"
 import { useCallback, useEffect, useState } from "react"
 import colors from "tailwindcss/colors"
-import Button from "../components/ui/button"
-import Flex from "../components/ui/flex"
-import { Input } from "../components/ui/input"
-import Text from "../components/ui/text"
 import { useAppState } from "../state"
 
 export default function NostrOnboarding() {

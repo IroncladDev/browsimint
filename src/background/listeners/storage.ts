@@ -1,11 +1,9 @@
+import { federationSchema } from "@/common/schemas"
+import { FederationItemSchema } from "@/common/types"
+import { sendExtensionMessage } from "@common/messaging/extension"
+import { LocalStore } from "@common/storage"
 import { FedimintWallet } from "@fedimint/core-web"
 import { Storage } from "webextension-polyfill"
-import { sendExtensionMessage } from "../../common/messaging/extension"
-import {
-  FederationItemSchema,
-  federationSchema,
-  LocalStore,
-} from "../../common/storage"
 import {
   balanceSubscription,
   setUnsubscribeBalance,

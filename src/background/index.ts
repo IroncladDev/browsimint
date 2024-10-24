@@ -16,7 +16,7 @@ export const initWallet = async () => {
         sendExtensionMessage({
           type: "balance",
           balance,
-        }).catch(() => { })
+        }).catch(() => {})
       }),
     )
   }

@@ -1,14 +1,15 @@
+import { FederationItemSchema } from "@/common/types"
 import { federations } from "@common/constants"
 import gr from "@common/gradients"
-import { FederationItemSchema, LocalStore } from "@common/storage"
+import { LocalStore } from "@common/storage"
+import Button from "@common/ui/button"
+import Flex from "@common/ui/flex"
+import Text from "@common/ui/text"
 import { motion, useMotionValue, useSpring } from "framer-motion"
 import { useCallback, useEffect, useState } from "react"
 import colors from "tailwindcss/colors"
-import Button from "../components/ui/button"
-import Flex from "../components/ui/flex"
-import Text from "../components/ui/text"
-import { useAppState } from "../state"
 import SelectableFederation from "../components/selectable-federation"
+import { useAppState } from "../state"
 
 export default function FederationsOnboarding() {
   const [selectedFederations, setSelectedFederations] = useState<

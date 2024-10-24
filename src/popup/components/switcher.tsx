@@ -1,14 +1,14 @@
 import { federations } from "@common/constants"
 import { LocalStore } from "@common/storage"
+import Button from "@common/ui/button"
+import Flex from "@common/ui/flex"
+import { Sheet, SheetContent, SheetTrigger } from "@common/ui/sheet"
+import Text from "@common/ui/text"
 import { ChevronDown } from "lucide-react"
 import { useState } from "react"
 import { styled } from "react-tailwind-variants"
-import Button from "./components/ui/button"
-import Flex from "./components/ui/flex"
-import { Sheet, SheetContent, SheetTrigger } from "./components/ui/sheet"
-import Text from "./components/ui/text"
-import { useAppState } from "./state"
-import SelectableFederation from "./components/selectable-federation"
+import { useAppState } from "../state"
+import SelectableFederation from "./selectable-federation"
 
 export default function Switcher() {
   const [open, setOpen] = useState(false)

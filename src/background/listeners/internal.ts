@@ -1,4 +1,4 @@
-import { messageInternalCall } from "@common/schemas/messages"
+import { messageInternalCall } from "@common/schemas"
 import { LocalStore } from "@common/storage"
 import { MessageInternalCall } from "@common/types"
 import { Duration, GatewayInfo, JSONObject } from "@fedimint/core-web"

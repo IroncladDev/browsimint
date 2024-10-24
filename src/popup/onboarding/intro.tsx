@@ -1,10 +1,10 @@
 import gr from "@common/gradients"
+import Button from "@common/ui/button"
+import Flex from "@common/ui/flex"
+import Text from "@common/ui/text"
 import { motion, useMotionValue, useSpring } from "framer-motion"
 import { useCallback, useEffect } from "react"
 import colors from "tailwindcss/colors"
-import Button from "../components/ui/button"
-import Flex from "../components/ui/flex"
-import Text from "../components/ui/text"
 import { useAppState } from "../state"
 
 export default function IntroOnboarding() {

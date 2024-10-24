@@ -1,19 +1,19 @@
 import gr from "@common/gradients"
+import Flex from "@common/ui/flex"
+import Text from "@common/ui/text"
 import { motion } from "framer-motion"
+import { Landmark, Zap } from "lucide-react"
 import { styled } from "react-tailwind-variants"
 import colors from "tailwindcss/colors"
-import Flex from "./components/ui/flex"
-import Text from "./components/ui/text"
+import Switcher from "./components/switcher"
 import FederationsOnboarding from "./onboarding/federations"
 import IntroOnboarding from "./onboarding/intro"
 import NostrOnboarding from "./onboarding/nostr"
 import { useAppState } from "./state"
-import Switcher from "./switcher"
 import ReceiveEcash from "./widgets/receive-ecash"
 import ReceiveLN from "./widgets/receive-ln"
 import SendEcash from "./widgets/send-ecash"
 import SendLN from "./widgets/send-ln"
-import { Bolt, Landmark, Zap } from "lucide-react"
 
 export default function Popup() {
   const state = useAppState()
@@ -62,7 +62,9 @@ export default function Popup() {
 
         <Fieldset>
           <Legend>
-            <Text color="dimmer" size="lg">Lightning</Text>
+            <Text color="dimmer" size="lg">
+              Lightning
+            </Text>
             <Zap className="w-4 h-4" />
           </Legend>
           <Flex gap={4}>
@@ -73,7 +75,9 @@ export default function Popup() {
 
         <Fieldset>
           <Legend>
-            <Text color="dimmer" size="lg">Ecash</Text>
+            <Text color="dimmer" size="lg">
+              Ecash
+            </Text>
             <Landmark className="w-4 h-4" />
           </Legend>
           <Flex gap={4}>

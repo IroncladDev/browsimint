@@ -1,17 +1,12 @@
-import { useEffect, useState } from "react"
-import Button from "../components/ui/button"
-import Flex from "../components/ui/flex"
-import { Input } from "../components/ui/input"
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "../components/ui/sheet"
-import Text from "../components/ui/text"
-import { useToast } from "../components/ui/use-toast"
-import { makeInternalCall } from "../messaging"
+import Button from "@common/ui/button"
+import Flex from "@common/ui/flex"
+import Input from "@common/ui/input"
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@common/ui/sheet"
+import Text from "@common/ui/text"
+import { useToast } from "@common/ui/use-toast"
 import { ArrowDown } from "lucide-react"
+import { useEffect, useState } from "react"
+import { makeInternalCall } from "../messaging"
 
 export default function ReceiveEcash() {
   const [notes, setNotes] = useState("")
@@ -75,7 +70,9 @@ export default function ReceiveEcash() {
               />
             </Input>
           </Flex>
-          <Button onClick={handleRedeemEcash} disabled={loading}>Paste</Button>
+          <Button onClick={handleRedeemEcash} disabled={loading}>
+            Paste
+          </Button>
         </Flex>
       </SheetContent>
     </Sheet>

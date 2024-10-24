@@ -34,7 +34,7 @@ const Text = styled("span", {
       default: "text-gray-100",
       dimmer: "text-gray-300",
       dimmest: "text-gray-500",
-    }
+    },
   },
   defaultVariants: {
     color: "default",

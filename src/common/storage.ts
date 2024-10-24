@@ -1,6 +1,7 @@
 import { JSONValue } from "@fedimint/core-web"
 import browser from "webextension-polyfill"
-import { z } from "zod"
+import { federationSchema } from "./schemas"
+import { FederationItemSchema, StorageKey } from "./types"
 
 export class LocalStore {
   // Get list of joined federations
@@ -76,15 +77,3 @@ export class LocalStore {
     }
   }
 }
-
-export type StorageKey = "federations" | "activeFederation" | "nsec"
-
-export const federationSchema = z.object({
-  name: z.string(),
-  id: z.string(),
-  icon: z.string().url(),
-  network: z.enum(["signet", "bitcoin"]),
-  invite: z.string(),
-})
-
-export type FederationItemSchema = z.infer<typeof federationSchema>

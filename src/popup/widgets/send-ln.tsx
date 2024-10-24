@@ -1,18 +1,13 @@
+import Button from "@common/ui/button"
+import Flex from "@common/ui/flex"
+import Input from "@common/ui/input"
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "@common/ui/sheet"
+import Text from "@common/ui/text"
+import { useToast } from "@common/ui/use-toast"
 import { OutgoingLightningPayment } from "@fedimint/core-web"
-import { useEffect, useState } from "react"
-import Button from "../components/ui/button"
-import Flex from "../components/ui/flex"
-import Text from "../components/ui/text"
-import { Input } from "../components/ui/input"
-import {
-  Sheet,
-  SheetContent,
-  SheetTitle,
-  SheetTrigger,
-} from "../components/ui/sheet"
-import { useToast } from "../components/ui/use-toast"
-import { makeInternalCall } from "../messaging"
 import { ArrowUp } from "lucide-react"
+import { useEffect, useState } from "react"
+import { makeInternalCall } from "../messaging"
 
 export default function SendLN() {
   const [open, setOpen] = useState(false)

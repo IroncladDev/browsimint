@@ -1,5 +1,4 @@
-import { FederationItemSchema } from "@common/storage"
-import { WindowModuleKind } from "@common/types"
+import { FederationItemSchema, WindowModuleKind } from "@common/types"
 
 // Prompt Window Dimensions
 export const promptWidth = 360
@@ -7,6 +6,9 @@ export const promptHeight = 400
 
 // Window extension names
 export const windowModule = ["fedimint", "nostr", "webln"] as const
+
+// Storage Keys
+export const storageKeys = ["federations", "activeFederation", "nsec"] as const
 
 // Permission Levels
 export enum PermissionLevel {

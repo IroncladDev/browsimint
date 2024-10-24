@@ -1,4 +1,4 @@
-import { extensionMessage } from "@common/schemas/messages"
+import { extensionMessage } from "@common/schemas"
 import { ExtensionMessage } from "@common/types"
 import browser from "webextension-polyfill"
 

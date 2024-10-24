@@ -1,6 +1,6 @@
-import { messageModuleCall } from "@/common/schemas/messages"
 import { sendExtensionMessage } from "@common/messaging/extension"
 import { postWindowMessage } from "@common/messaging/window"
+import { messageModuleCall } from "@common/schemas"
 import { MessageModuleCall } from "@common/types"
 import browser from "webextension-polyfill"
 

@@ -1,5 +1,4 @@
-import { z } from "zod"
-import { windowModule } from "./constants"
+import { windowModule } from "@common/constants"
 import {
   extensionMessage,
   messageBalanceRequest,
@@ -10,7 +9,8 @@ import {
   messagePromptChoice,
   messagePromptReject,
   windowAck,
-} from "./schemas/messages"
+} from "@common/schemas"
+import { z } from "zod"
 
 // Window module kind
 export type WindowModuleKind = (typeof windowModule)[number]
