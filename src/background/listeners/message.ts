@@ -1,4 +1,5 @@
 import {
+  EXTENSION_NAME,
   PermissionLevel,
   permissions,
   promptHeight,
@@ -53,7 +54,7 @@ export async function handleMessage(msg: ExtensionMessage, sender: any) {
       case "balanceRequest":
         if (wallet.isOpen()) {
           sendExtensionMessage({
-            ext: "fedimint-web",
+            ext: EXTENSION_NAME,
             type: "balance",
             balance: await wallet.balance.getBalance(),
           })
@@ -82,7 +83,7 @@ async function handleContentScriptMessage(msg: MessageModuleCall) {
 
     let result = {
       type: "prompt",
-      ext: "fedimint-web",
+      ext: EXTENSION_NAME,
       prompt: true,
       accept: true,
       method,
@@ -117,7 +118,7 @@ async function handleContentScriptMessage(msg: MessageModuleCall) {
             if (id === win.id) {
               resolve({
                 type: "prompt",
-                ext: "fedimint-web",
+                ext: EXTENSION_NAME,
                 prompt: true,
                 accept: false,
                 method,

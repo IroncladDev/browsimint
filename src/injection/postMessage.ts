@@ -1,3 +1,4 @@
+import { EXTENSION_NAME } from "@/common/constants"
 import { postWindowMessage } from "../common/messaging/window"
 import { messageModuleCall } from "../common/schemas/messages"
 import { MessageModuleCall, WindowModuleKind } from "../common/types"
@@ -19,7 +20,7 @@ export function postMessage(
           {
             type: "methodCall",
             id,
-            ext: "fedimint-web",
+            ext: EXTENSION_NAME,
             module,
             method,
             params,
@@ -32,8 +33,8 @@ export function postMessage(
           messageEvent: MessageEvent<{
             request: MessageModuleCall
             response:
-              | { success: false; message: string }
-              | { success: true; data: any }
+            | { success: false; message: string }
+            | { success: true; data: any }
           }>,
         ) {
           if (!messageEvent.data || !messageEvent.data.response) {

@@ -1,3 +1,5 @@
+import { EXTENSION_NAME } from "@/common/constants"
+import { extensionMessage } from "@/common/schemas/messages"
 import { sendExtensionMessage } from "@common/messaging/extension"
 import { FederationItemSchema, LocalStore, StorageKey } from "@common/storage"
 import { ExtensionMessage } from "@common/types"
@@ -70,17 +72,17 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const balanceListener = (message: ExtensionMessage) => {
-      if (message.ext !== "fedimint-web") return
+      const { success, data } = extensionMessage.safeParse(message)
 
-      if (message.type === "balance") {
-        setBalance(message.balance)
+      if (success && data.type === "balance") {
+        setBalance(data.balance)
       }
     }
 
     browser.runtime.onMessage.addListener(balanceListener)
 
     sendExtensionMessage({
-      ext: "fedimint-web",
+      ext: EXTENSION_NAME,
       type: "balanceRequest",
     })
 

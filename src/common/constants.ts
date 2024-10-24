@@ -69,4 +69,4 @@ export const federations: Array<FederationItemSchema> = [
   },
 ]
 
-export const EXTENSION_NAME = "fedimint-web"
+export const EXTENSION_NAME = "browsimint"

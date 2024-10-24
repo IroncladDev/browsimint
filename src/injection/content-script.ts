@@ -1,3 +1,5 @@
+import { EXTENSION_NAME } from "@/common/constants"
+import { messageModuleCall } from "@/common/schemas/messages"
 import { sendExtensionMessage } from "@common/messaging/extension"
 import { postWindowMessage } from "@common/messaging/window"
 import { MessageModuleCall } from "@common/types"
@@ -11,14 +13,10 @@ script.setAttribute("src", browser.runtime.getURL("src/injection/index.js"))
 document.head.appendChild(script)
 
 // listen for messages from that script
-window.addEventListener("message", async message => {
-  if (message.source !== window) return
+window.addEventListener("message", async windowMsg => {
+  const res = messageModuleCall.safeParse(windowMsg.data)
 
-  if (!message.data) return
-
-  if (!message.data.params) return
-
-  if (message.data.ext !== "fedimint-web") return
+  if (windowMsg.source !== window || !res.success) return
 
   const activeElement = document.activeElement
 
@@ -31,13 +29,15 @@ window.addEventListener("message", async message => {
   // pass on to background
   let response
 
+  const message = res.data
+
   const msg: MessageModuleCall = {
     type: "methodCall",
-    id: message.data.id,
-    ext: "fedimint-web",
-    module: message.data.module,
-    method: message.data.method,
-    params: message.data.params,
+    id: message.id,
+    ext: EXTENSION_NAME,
+    module: message.module,
+    method: message.method,
+    params: message.params,
     windowPos: [
       window.innerWidth / 2 - popupWidth / 2,
       window.innerHeight / 2 - popupHeight / 2,
@@ -59,7 +59,7 @@ window.addEventListener("message", async message => {
   }
 
   // return response
-  postWindowMessage({ request: msg, response }, message.origin)
+  postWindowMessage({ request: msg, response }, windowMsg.origin)
 })
 
 // Whether we should send the client rect to the worker

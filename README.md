@@ -1,26 +1,10 @@
-# Fedimint Web
+# Browsimint
 
-TODO:
-- [x] Permissions
-- [x] Webln injection
-- [x] Nostr injection
-- [x] Fedimint injection
-- [x] Bring-your-own nsec
-- [x] Federation switching
-- [x] Functionalize popup
-- [ ] Fix window positioning
-- [ ] Open window in bottom-right corner if no focused element
+A Fedimint Wallet browser extension
 
-- [ ] Nsec validation
-- [ ] Federation validation
-- [ ] Sat/msat conversion utils
+## Development
 
-## Future Considerations
-
-- [ ] Permission to get the federation invite code (X would like to join <federation>)
-- [ ] Permission to list operations (transaction history)
-- [ ] Permission to redeem/reissue ecash notes
-- [ ] Permission strictness settings
-- [ ] Nsec settings
-- [ ] Keyboard navigation / shortcuts
-- [ ] PIN protection
+1. Ensure you have [bun](https://bun.sh/) installed
+2. Run `bun install`
+3. Run `bun run dev` to start the development server or `bun run build` to simply build the extension
+4. Unpack the extension in your browser of choice and upload the `dist` folder

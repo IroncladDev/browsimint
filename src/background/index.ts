@@ -4,6 +4,7 @@ import browser from "webextension-polyfill"
 import { handleMessage } from "./listeners/message"
 import { handleStorageChange } from "./listeners/storage"
 import { balanceSubscription, setUnsubscribeBalance, wallet } from "./state"
+import { EXTENSION_NAME } from "@/common/constants"
 
 export const initWallet = async () => {
   const activeFederation = await LocalStore.getActiveFederation()
@@ -14,10 +15,10 @@ export const initWallet = async () => {
     setUnsubscribeBalance(
       wallet.balance.subscribeBalance(async balance => {
         sendExtensionMessage({
-          ext: "fedimint-web",
+          ext: EXTENSION_NAME,
           type: "balance",
           balance,
-        }).catch(() => {})
+        }).catch(() => { })
       }),
     )
   }
