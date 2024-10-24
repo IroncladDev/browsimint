@@ -104,7 +104,7 @@ async function handleContentScriptMessage(msg: MessageModuleCall) {
 
           const win = await browser.windows.create({
             url: `${browser.runtime.getURL(
-              "src/prompt.html",
+              "src/prompt/prompt.html",
             )}?${queryParams.toString()}`,
             type: "popup",
             width: promptWidth,

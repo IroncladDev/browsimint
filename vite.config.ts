@@ -22,7 +22,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@common": path.resolve(__dirname, "./src"),
+      "@common": path.resolve(__dirname, "./src/common"),
     },
   },
   plugins: [
@@ -37,8 +37,8 @@ export default defineConfig({
         "src/injection/index.ts",
         "src/injection/content-script.ts",
         "src/background/index.ts",
-        "src/prompt.html",
-        "src/popup.html",
+        "src/prompt/prompt.html",
+        "src/popup/popup.html",
       ],
     }),
   ],

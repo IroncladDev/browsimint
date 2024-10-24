@@ -8,10 +8,10 @@
     "128": "icon/128.png"
   },
   "browser_action": {
-    "default_popup": "src/popup.html"
+    "default_popup": "src/popup/popup.html"
   },
   "background": {
-    "page": "src/background.html"
+    "page": "src/background/background.html"
   },
   "content_security_policy": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'",
   "permissions": [
