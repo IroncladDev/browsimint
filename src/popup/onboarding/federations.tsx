@@ -2,14 +2,13 @@ import { federations } from "@common/constants"
 import gr from "@common/gradients"
 import { FederationItemSchema, LocalStore } from "@common/storage"
 import { motion, useMotionValue, useSpring } from "framer-motion"
-import { Check } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
-import { styled } from "react-tailwind-variants"
 import colors from "tailwindcss/colors"
-import { Button } from "../components/ui/button"
+import Button from "../components/ui/button"
 import Flex from "../components/ui/flex"
 import Text from "../components/ui/text"
 import { useAppState } from "../state"
+import SelectableFederation from "../components/selectable-federation"
 
 export default function FederationsOnboarding() {
   const [selectedFederations, setSelectedFederations] = useState<
@@ -78,7 +77,7 @@ export default function FederationsOnboarding() {
 
         <Flex col gap={2} width="full">
           {federations.map((federation, index) => (
-            <FederationItem
+            <SelectableFederation
               {...federation}
               key={index}
               selected={selectedFederations.some(x => x.id === federation.id)}
@@ -107,7 +106,7 @@ export default function FederationsOnboarding() {
           </Button>
           <Button
             variant="secondary"
-            small
+            size="small"
             onClick={() => alert("Not implemented")}
           >
             Join by Invite Code
@@ -117,56 +116,3 @@ export default function FederationsOnboarding() {
     </Flex>
   )
 }
-
-function FederationItem({
-  name,
-  icon,
-  network,
-  selected,
-  onSelect,
-}: FederationItemSchema & { selected: boolean; onSelect: () => void }) {
-  return (
-    <ItemContainer
-      gap={2}
-      align="center"
-      asChild
-      selected={selected}
-      onClick={onSelect}
-      className="p-1.5"
-    >
-      <button>
-        <img
-          src={icon}
-          alt={name}
-          width={28}
-          height={28}
-          className="rounded-lg border border-gray-800"
-        />
-        <Text className="text-white">{name}</Text>
-        <Flex grow>{network === "signet" && <Pill>Signet</Pill>}</Flex>
-        {selected && (
-          <SelectedIndicator>
-            <Check className="w-4 h-4" />
-          </SelectedIndicator>
-        )}
-      </button>
-    </ItemContainer>
-  )
-}
-
-const SelectedIndicator = styled("div", {
-  base: "text-white bg-cyan-600 rounded-full w-5 h-5 flex items-center justify-center",
-})
-
-const Pill = styled("div", {
-  base: "rounded-full px-2 py-1 text-xs font-medium text-gray-500 bg-gray-900 border border-gray-800",
-})
-
-const ItemContainer = styled(Flex, {
-  base: "rounded-lg border border-gray-400/30 hover:bg-gray-800/50 transition-colors",
-  variants: {
-    selected: {
-      true: "border-cyan-600",
-    },
-  },
-})

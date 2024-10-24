@@ -1,10 +1,16 @@
-import plugin from "tailwindcss-animate"
+import tailwindCssAnimate from "tailwindcss-animate"
+import type { Config } from "tailwindcss"
 
-/** @type {import('tailwindcss').Config} */
-export default {
+const config: Config = {
   content: ["./src/**/*.{html,css,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      borderWidth: {
+        "1.5": "1.5px",
+      },
+    },
   },
-  plugins: [plugin],
+  plugins: [tailwindCssAnimate],
 }
+
+export default config

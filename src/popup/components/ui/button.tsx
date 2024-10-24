@@ -1,16 +1,26 @@
 import { styled } from "react-tailwind-variants"
 
-export const Button = styled("button", {
-  base: "border-2 rounded-lg px-4 py-1.5 outline-none basis-0 text-base transition-colors",
+const Button = styled("button", {
+  base: `inline-flex gap-2 items-center justify-center basis-0 border-2 rounded-lg outline-none transition-colors`,
   variants: {
-    small: {
-      true: "px-2 py-1",
+    size: {
+      default: "text-base px-4 py-1.5",
+      small: "text-sm px-2 py-1",
     },
     variant: {
-      primary:
-        "bg-sky-900/50 text-cyan-500 border-cyan-700 hover:bg-sky-800/50 hover:border-cyan-600 active:bg-sky-700 active:border-cyan-500",
-      secondary:
-        "bg-gray-900/50 text-gray-400 border-gray-600 hover:bg-gray-800/50 hover:border-gray-500 active:bg-gray-800 active:border-gray-400",
+      primary: `
+        bg-sky-800/50 text-cyan-400 border-cyan-500/50
+
+        hover:bg-sky-800/75 hover:border-cyan-500/75
+
+        active:bg-sky-800/90 active:border-cyan-500/90
+      `,
+      secondary: `
+        bg-gray-800/50 text-gray-300 border-gray-500/50
+
+        hover:bg-gray-800/75 hover:border-gray-500/75
+
+        active:bg-gray-800/90 active:border-gray-500/90`,
     },
     fullWidth: {
       true: "w-full",
@@ -24,5 +34,8 @@ export const Button = styled("button", {
   },
   defaultVariants: {
     variant: "primary",
+    size: "default",
   },
 })
+
+export default Button

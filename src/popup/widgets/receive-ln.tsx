@@ -1,6 +1,6 @@
 import { CreateBolt11Response } from "@fedimint/core-web"
 import { useEffect, useState } from "react"
-import { Button } from "../components/ui/button"
+import Button from "../components/ui/button"
 import Flex from "../components/ui/flex"
 import { Input } from "../components/ui/input"
 import {
@@ -12,6 +12,7 @@ import {
 import Text from "../components/ui/text"
 import { useToast } from "../components/ui/use-toast"
 import { makeInternalCall } from "../messaging"
+import { ArrowDown } from "lucide-react"
 
 export default function ReceiveLN() {
   const [amount, setAmount] = useState(0)
@@ -60,8 +61,9 @@ export default function ReceiveLN() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button small fullWidth variant="secondary" grow>
-          Request
+        <Button fullWidth variant="secondary" grow>
+          <Text>Request</Text>
+          <ArrowDown className="w-5 h-5" />
         </Button>
       </SheetTrigger>
       <SheetContent>

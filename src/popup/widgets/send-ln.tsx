@@ -1,7 +1,8 @@
 import { OutgoingLightningPayment } from "@fedimint/core-web"
 import { useEffect, useState } from "react"
-import { Button } from "../components/ui/button"
+import Button from "../components/ui/button"
 import Flex from "../components/ui/flex"
+import Text from "../components/ui/text"
 import { Input } from "../components/ui/input"
 import {
   Sheet,
@@ -11,6 +12,7 @@ import {
 } from "../components/ui/sheet"
 import { useToast } from "../components/ui/use-toast"
 import { makeInternalCall } from "../messaging"
+import { ArrowUp } from "lucide-react"
 
 export default function SendLN() {
   const [open, setOpen] = useState(false)
@@ -52,8 +54,9 @@ export default function SendLN() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button small fullWidth variant="secondary" grow>
-          Pay
+        <Button fullWidth variant="secondary" grow>
+          <Text>Pay</Text>
+          <ArrowUp className="w-5 h-5" />
         </Button>
       </SheetTrigger>
       <SheetContent>

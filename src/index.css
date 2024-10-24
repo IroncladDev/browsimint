@@ -1,20 +1,23 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&family=Space+Grotesk:wght@300..700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
+  body,
+  html {
+    @apply bg-gray-900 text-white;
+    font-family: "Albert Sans", sans-serif;
+  }
 
-    body,
-    html {
-        @apply bg-gray-900 text-white;
-        font-family: "Inter", sans-serif;
-    }
+  h1, h2, h3, h4 {
+    font-family: "Space Grotesk", Arial, Helvetica, sans-serif;
+  }
 
-    button,
-    input,
-    textarea {
-        font-family: "Inter", sans-serif;
-    }
+  button,
+  input,
+  textarea {
+    font-family: "Albert Sans", sans-serif;
+  }
 }

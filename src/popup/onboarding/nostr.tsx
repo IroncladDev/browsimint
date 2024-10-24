@@ -3,7 +3,7 @@ import { LocalStore } from "@common/storage"
 import { motion, useMotionValue, useSpring } from "framer-motion"
 import { useCallback, useEffect, useState } from "react"
 import colors from "tailwindcss/colors"
-import { Button } from "../components/ui/button"
+import Button from "../components/ui/button"
 import Flex from "../components/ui/flex"
 import { Input } from "../components/ui/input"
 import Text from "../components/ui/text"
@@ -22,57 +22,36 @@ export default function NostrOnboarding() {
     return gr.merge(
       gr.radial(
         `circle at ${110 - 110 * p}% 0%`,
-        colors.sky["700"] + "d5",
-        colors.sky["800"] + "a4 120px",
+        colors.sky["700"] + "a4",
+        colors.sky["800"] + "8a 120px",
         "transparent 130px",
         "transparent",
       ),
       gr.radial(
         atSeventh(0),
-        colors.sky["700"] + "d5",
-        colors.sky["800"] + "a4 50px",
+        colors.sky["700"] + "a4",
+        colors.sky["800"] + "da 50px",
         "transparent 60px",
         "transparent",
       ),
       gr.radial(
         atSeventh(1),
-        colors.sky["700"] + "d5",
-        colors.sky["800"] + "a4 50px",
+        colors.sky["700"] + "a4",
+        colors.sky["800"] + "da 50px",
         "transparent 60px",
         "transparent",
       ),
       gr.radial(
         atSeventh(2),
-        colors.sky["700"] + "d5",
-        colors.sky["800"] + "a4 50px",
+        colors.sky["700"] + "a4",
+        colors.sky["800"] + "da 50px",
         "transparent 60px",
         "transparent",
       ),
       gr.radial(
         atSeventh(3),
-        colors.sky["700"] + "d5",
-        colors.sky["800"] + "a4 50px",
-        "transparent 60px",
-        "transparent",
-      ),
-      gr.radial(
-        atSeventh(4),
-        colors.sky["700"] + "d5",
-        colors.sky["800"] + "a4 50px",
-        "transparent 60px",
-        "transparent",
-      ),
-      gr.radial(
-        atSeventh(5),
-        colors.sky["700"] + "d5",
-        colors.sky["800"] + "a4 50px",
-        "transparent 60px",
-        "transparent",
-      ),
-      gr.radial(
-        atSeventh(6),
-        colors.sky["700"] + "d5",
-        colors.sky["800"] + "a4 50px",
+        colors.sky["700"] + "a4",
+        colors.sky["800"] + "da 50px",
         "transparent 60px",
         "transparent",
       ),
@@ -125,7 +104,7 @@ export default function NostrOnboarding() {
           </Button>
           <Button
             variant="secondary"
-            small
+            size="small"
             onClick={() => state.setOnboardingStep(3)}
           >
             Skip

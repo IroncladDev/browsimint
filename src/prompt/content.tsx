@@ -1,4 +1,4 @@
-import { Button } from "@/popup/components/ui/button"
+import Button from "@/popup/components/ui/button"
 import Flex from "@/popup/components/ui/flex"
 import { Input } from "@/popup/components/ui/input"
 import Text from "@/popup/components/ui/text"
@@ -199,7 +199,9 @@ export default function Prompt() {
             width={32}
             height={32}
           />
-          <Text size="xl">Browsimint</Text>
+          <Text size="h1" weight="bold" asChild>
+            <h1>Browsimint</h1>
+          </Text>
         </Flex>
         {/* switcher / nostr icon*/}
       </Flex>

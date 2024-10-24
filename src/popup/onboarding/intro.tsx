@@ -2,7 +2,7 @@ import gr from "@common/gradients"
 import { motion, useMotionValue, useSpring } from "framer-motion"
 import { useCallback, useEffect } from "react"
 import colors from "tailwindcss/colors"
-import { Button } from "../components/ui/button"
+import Button from "../components/ui/button"
 import Flex from "../components/ui/flex"
 import Text from "../components/ui/text"
 import { useAppState } from "../state"
@@ -48,8 +48,8 @@ export default function IntroOnboarding() {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
       >
-        <Text size="xl" weight="bold">
-          Browsimint
+        <Text size="h1" weight="bold" asChild>
+          <h1>Browsimint</h1>
         </Text>
         <img
           src="/logo.svg"

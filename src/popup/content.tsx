@@ -13,6 +13,7 @@ import ReceiveEcash from "./widgets/receive-ecash"
 import ReceiveLN from "./widgets/receive-ln"
 import SendEcash from "./widgets/send-ecash"
 import SendLN from "./widgets/send-ln"
+import { Bolt, Landmark, Zap } from "lucide-react"
 
 export default function Popup() {
   const state = useAppState()
@@ -55,22 +56,27 @@ export default function Popup() {
           <Switcher />
         </Flex>
 
-        <Fieldset>
-          <Legend>Balance</Legend>
-          <Text>{Math.round(state.balance / 1000)} sats</Text>
-        </Fieldset>
+        <Flex col center width="full" className="py-6">
+          <Text size="h1">{Math.round(state.balance / 1000)} sats</Text>
+        </Flex>
 
         <Fieldset>
-          <Legend>Lightning ⚡</Legend>
-          <Flex gap={2}>
+          <Legend>
+            <Text color="dimmer" size="lg">Lightning</Text>
+            <Zap className="w-4 h-4" />
+          </Legend>
+          <Flex gap={4}>
             <ReceiveLN />
             <SendLN />
           </Flex>
         </Fieldset>
 
         <Fieldset>
-          <Legend>Ecash 💰</Legend>
-          <Flex gap={2}>
+          <Legend>
+            <Text color="dimmer" size="lg">Ecash</Text>
+            <Landmark className="w-4 h-4" />
+          </Legend>
+          <Flex gap={4}>
             <ReceiveEcash />
             <SendEcash />
           </Flex>
@@ -81,9 +87,9 @@ export default function Popup() {
 }
 
 const Fieldset = styled("fieldset", {
-  base: "flex flex-col gap-2 px-2 pt-1 pb-2 rounded-lg border border-gray-600/50 bg-gray-900/50",
+  base: "flex flex-col gap-4 px-4 pt-2 pb-4 rounded-lg border-2 border-cyan-700/50 bg-gray-900/50",
 })
 
 const Legend = styled("legend", {
-  base: "text-white text-sm font-medium",
+  base: "flex row gap-1 items-center px-2",
 })

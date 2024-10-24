@@ -1,13 +1,14 @@
 import { federations } from "@common/constants"
-import { FederationItemSchema, LocalStore } from "@common/storage"
-import { Check, ChevronDown } from "lucide-react"
+import { LocalStore } from "@common/storage"
+import { ChevronDown } from "lucide-react"
 import { useState } from "react"
 import { styled } from "react-tailwind-variants"
-import { Button } from "./components/ui/button"
+import Button from "./components/ui/button"
 import Flex from "./components/ui/flex"
 import { Sheet, SheetContent, SheetTrigger } from "./components/ui/sheet"
 import Text from "./components/ui/text"
 import { useAppState } from "./state"
+import SelectableFederation from "./components/selectable-federation"
 
 export default function Switcher() {
   const [open, setOpen] = useState(false)
@@ -21,7 +22,7 @@ export default function Switcher() {
           <Text size="base" weight="medium" className="text-white">
             {state.activeFederation?.name}
           </Text>
-          <ChevronDown className="w-4 h-4 text-white" />
+          <ChevronDown className="w-4 h-4 text-gray-400" />
         </Outer>
       </SheetTrigger>
       <SheetContent>
@@ -30,8 +31,9 @@ export default function Switcher() {
             {federations
               .filter(x => state.federations.some(f => f.id === x.id))
               .map(federation => (
-                <FederationSwitchItem
+                <SelectableFederation
                   key={federation.name}
+                  selected={state.activeFederation?.id === federation.id}
                   onSelect={() => {
                     LocalStore.setKey("activeFederation", federation.id)
                     setOpen(false)
@@ -42,7 +44,7 @@ export default function Switcher() {
           </Flex>
           <Flex col gap={2}>
             <Button>Add New</Button>
-            <Button variant="secondary" small>
+            <Button variant="secondary" size="small">
               Manage
             </Button>
           </Flex>
@@ -52,61 +54,16 @@ export default function Switcher() {
   )
 }
 
-function FederationSwitchItem({
-  onSelect,
-  ...item
-}: FederationItemSchema & { onSelect: () => void }) {
-  const { name, icon, network, id } = item
-  const state = useAppState()
-
-  return (
-    <ItemContainer
-      gap={2}
-      align="center"
-      asChild
-      selected={state.activeFederation?.id === id}
-      onClick={onSelect}
-      className="p-1.5"
-    >
-      <button>
-        <img
-          src={icon}
-          alt={name}
-          width={28}
-          height={28}
-          className="rounded-lg border border-gray-800"
-        />
-        <Text className="text-white">{name}</Text>
-        <Flex grow>{network === "signet" && <Pill>Signet</Pill>}</Flex>
-        {state.activeFederation?.id === id && (
-          <SelectedIndicator>
-            <Check className="w-4 h-4" />
-          </SelectedIndicator>
-        )}
-      </button>
-    </ItemContainer>
-  )
-}
-
-const SelectedIndicator = styled("div", {
-  base: "text-white bg-cyan-600 rounded-full w-5 h-5 flex items-center justify-center",
-})
-
-const Pill = styled("div", {
-  base: "rounded-full px-2 py-1 text-xs font-medium text-gray-500 bg-gray-900 border border-gray-800",
-})
-
-const ItemContainer = styled(Flex, {
-  base: "rounded-lg border border-gray-800 hover:bg-gray-800/50",
-  variants: {
-    selected: {
-      true: "border-cyan-600",
-    },
-  },
-})
-
 const Outer = styled("button", {
-  base: "rounded-lg p-1.5 pr-2 bg-gray-900 border border-gray-700 text-gray-400 outline-none flex items-center gap-2 hover:bg-gray-800 hover:border-gray-600 active:bg-gray-800 active:border-gray-500",
+  base: `flex items-center gap-2 transition-all
+
+  rounded-full px-3 py-1.5 border-1.5 outline-none
+
+  bg-gray-800/50 text-gray-400 border-gray-600/50
+
+  hover:bg-gray-800/75 hover:border-gray-600/75
+
+  active:bg-gray-800/90 active:border-gray-600/90`,
 })
 
 const Icon = styled("img", {

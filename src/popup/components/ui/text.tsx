@@ -8,6 +8,8 @@ const Text = styled("span", {
       base: "text-base",
       lg: "text-lg",
       xl: "text-xl",
+      h2: "text-2xl",
+      h1: "text-3xl",
     },
     weight: {
       default: "font-normal",
@@ -28,9 +30,15 @@ const Text = styled("span", {
     paragraph: {
       true: "max-w-[480px]",
     },
+    color: {
+      default: "text-gray-100",
+      dimmer: "text-gray-300",
+      dimmest: "text-gray-500",
+    }
   },
   defaultVariants: {
-    size: "sm",
+    color: "default",
+    size: "base",
     weight: "default",
     multiline: false,
     center: false,

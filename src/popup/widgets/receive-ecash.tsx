@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Button } from "../components/ui/button"
+import Button from "../components/ui/button"
 import Flex from "../components/ui/flex"
 import { Input } from "../components/ui/input"
 import {
@@ -11,6 +11,7 @@ import {
 import Text from "../components/ui/text"
 import { useToast } from "../components/ui/use-toast"
 import { makeInternalCall } from "../messaging"
+import { ArrowDown } from "lucide-react"
 
 export default function ReceiveEcash() {
   const [notes, setNotes] = useState("")
@@ -55,8 +56,9 @@ export default function ReceiveEcash() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Button small fullWidth variant="secondary" grow>
-          Receive
+        <Button fullWidth variant="secondary" grow>
+          <Text>Receive</Text>
+          <ArrowDown className="w-5 h-5" />
         </Button>
       </SheetTrigger>
       <SheetContent>
@@ -73,7 +75,7 @@ export default function ReceiveEcash() {
               />
             </Input>
           </Flex>
-          <Button onClick={handleRedeemEcash}>Paste</Button>
+          <Button onClick={handleRedeemEcash} disabled={loading}>Paste</Button>
         </Flex>
       </SheetContent>
     </Sheet>
