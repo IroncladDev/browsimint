@@ -57,7 +57,7 @@ export default function Popup() {
         </Flex>
 
         <Flex col center width="full" className="py-6">
-          <Text size="h1">{Math.round(state.balance / 1000)} sats</Text>
+          <Text size="h1">{Math.floor(state.balance / 1000)} sats</Text>
         </Flex>
 
         <Fieldset>

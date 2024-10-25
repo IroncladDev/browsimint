@@ -42,7 +42,7 @@ export default class WeblnProvider {
   async sendPayment(paymentRequest: string): Promise<{ preimage: string }> {
     this.ensureEnabled()
 
-    return await postMessage("sendPayment", paymentRequest, "webln")
+    return await postMessage("sendPayment", { paymentRequest }, "webln")
   }
 
   private ensureEnabled() {

@@ -9,7 +9,8 @@ export function postWindowMessage(
   msg: WindowMessage,
   origin: string,
 ) {
-  windowMessageSchema.parse(msg)
+  // windowMessageSchema.parse(msg)
+  console.log(msg, "AAAAAAAAAAAAAAAAAAA")
 
   return window.postMessage(msg, origin)
 }

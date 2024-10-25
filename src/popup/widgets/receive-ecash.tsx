@@ -31,7 +31,7 @@ export default function ReceiveEcash() {
 
     if (res.success) {
       toast({
-        title: `Redeemed ${Math.round(res.data / 1000)} sats of ecash notes`,
+        title: `Redeemed ${Math.floor(res.data / 1000)} sats of ecash notes`,
       })
 
       reset()

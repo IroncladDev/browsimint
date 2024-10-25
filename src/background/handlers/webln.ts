@@ -31,17 +31,19 @@ export default async function handleWeblnMessage(
   switch (method) {
     case "getBalance":
       return {
-        balance: Math.round((await wallet.balance.getBalance()) / 1000),
+        balance: Math.floor((await wallet.balance.getBalance()) / 1000),
         currency: "sats",
       }
     case "makeInvoice":
-      return await wallet.lightning.createInvoice(
+      const { invoice } = await wallet.lightning.createInvoice(
         params.amount,
         params.description,
         params.expiryTime,
         params.gatewayInfo,
         params.extraMeta,
       )
+
+      return { paymentRequest: invoice }
     case "sendPayment":
       const res = await wallet.lightning.payInvoice(
         params.paymentRequest,
