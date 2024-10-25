@@ -26,11 +26,11 @@ initWallet()
 
 wallet.setLogLevel("debug")
 
-browser.runtime.onInstalled.addListener(({ reason }) => {
-  if (reason === "install") {
-    browser.action.openPopup()
-  }
-})
+// browser.runtime.onInstalled.addListener(({ reason }) => {
+//   if (reason === "install") {
+//     browser.action.openPopup()
+//   }
+// })
 
 browser.storage.onChanged.addListener(handleStorageChange)
 browser.runtime.onMessage.addListener(handleMessage)
