@@ -1,12 +1,15 @@
 import { messageModuleCall, windowAck } from "@common/schemas"
-import { MessageModuleCall, WindowAck } from "@common/types"
 import { z } from "zod"
 
+const windowMessageSchema = z.union([messageModuleCall, windowAck])
+
+type WindowMessage = z.infer<typeof windowMessageSchema>
+
 export function postWindowMessage(
-  msg: MessageModuleCall | WindowAck,
+  msg: WindowMessage,
   origin: string,
 ) {
-  z.union([messageModuleCall, windowAck]).parse(msg)
+  windowMessageSchema.parse(msg)
 
   return window.postMessage(msg, origin)
 }

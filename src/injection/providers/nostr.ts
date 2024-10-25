@@ -2,7 +2,7 @@ import { postMessage } from "../postMessage"
 
 export default class NostrProvider {
   getPublicKey(): Promise<string> {
-    return postMessage("signEvent", {}, "nostr")
+    return postMessage("getPublicKey", {}, "nostr")
   }
 
   signEvent(event: UnsignedNostrEvent): Promise<SignedNostrEvent> {

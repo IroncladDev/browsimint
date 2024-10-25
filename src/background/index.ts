@@ -3,13 +3,13 @@ import { LocalStore } from "@common/storage"
 import browser from "webextension-polyfill"
 import { handleMessage } from "./listeners/message"
 import { handleStorageChange } from "./listeners/storage"
-import { balanceSubscription, setUnsubscribeBalance, wallet } from "./state"
+import { unsubscribeBalance, setUnsubscribeBalance, wallet } from "./state"
 
 export const initWallet = async () => {
   const activeFederation = await LocalStore.getActiveFederation()
 
   if (activeFederation && !wallet.isOpen()) {
-    balanceSubscription()
+    unsubscribeBalance()
     await wallet.open(activeFederation.id)
     setUnsubscribeBalance(
       wallet.balance.subscribeBalance(async balance => {

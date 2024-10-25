@@ -17,7 +17,6 @@ import handleFedimintMessage, { FedimintParams } from "../handlers/fedimint"
 import handleNostrMessage, { NostrParams } from "../handlers/nostr"
 import handleWeblnMessage, { WeblnParams } from "../handlers/webln"
 import {
-  openPrompt,
   promptMutex,
   releasePromptMutex,
   setReleasePromptMutex,
@@ -25,6 +24,7 @@ import {
   wallet,
 } from "../state"
 import handleInternalMessage from "./internal"
+import { handlePromptMessage } from "./prompt"
 
 export async function handleMessage(msg: ExtensionMessage, sender: any) {
   const message = extensionMessage.parse(msg)
@@ -32,15 +32,7 @@ export async function handleMessage(msg: ExtensionMessage, sender: any) {
   try {
     switch (message.type) {
       case "prompt":
-        if (!message.accept || !openPrompt) return
-
-        openPrompt.resolve(message)
-        setWindowPrompt(null)
-        releasePromptMutex()
-
-        if (sender) {
-          browser.windows.remove(sender.tab.windowId)
-        }
+        handlePromptMessage(msg as MessagePromptChoice, sender)
         break
       case "methodCall":
         const methodRes = await handleContentScriptMessage(message)
@@ -79,13 +71,12 @@ async function handleContentScriptMessage(msg: MessageModuleCall) {
   try {
     await initWallet()
 
-    let result = {
+    let result: MessagePromptChoice = {
       type: "prompt",
-      prompt: true,
       accept: true,
       method,
       params,
-    } as MessagePromptChoice
+    }
 
     if (permissions[module][method] !== PermissionLevel.None) {
       setReleasePromptMutex(await promptMutex.acquire())
@@ -115,10 +106,9 @@ async function handleContentScriptMessage(msg: MessageModuleCall) {
             if (id === win.id) {
               resolve({
                 type: "prompt",
-                prompt: true,
                 accept: false,
                 method,
-              } as MessagePromptChoice)
+              })
               browser.windows.onRemoved.removeListener(listenForClose)
             }
           }

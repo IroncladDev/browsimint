@@ -10,7 +10,7 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.{ts,tsx}\" --plugin=prettier-plugin-organize-imports"
   },
   "dependencies": {
-    "@fedimint/core-web": "^0.0.7",
+    "@fedimint/core-web": "^0.0.8",
     "@radix-ui/react-dialog": "^1.1.2",
     "@radix-ui/react-toast": "^1.2.2",
     "async-mutex": "^0.5.0",

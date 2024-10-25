@@ -1,171 +1,41 @@
 import { windowModule } from "@common/constants"
 import gr from "@common/gradients"
-import { sendExtensionMessage } from "@common/messaging/extension"
 import { WindowModuleKind } from "@common/types"
-import Button from "@common/ui/button"
 import Flex from "@common/ui/flex"
-import Input from "@common/ui/input"
-import Text from "@common/ui/text"
-import { useEffect, useState } from "react"
 import { styled } from "react-tailwind-variants"
 import colors from "tailwindcss/colors"
-import browser from "webextension-polyfill"
-
-const titleKeys: Record<WindowModuleKind, { [key: string]: string }> = {
-  fedimint: {
-    spendNotes: "Spend Ecash",
-  },
-  nostr: {
-    signEvent: "Sign Event",
-  },
-  webln: {
-    makeInvoice: "Create Invoice",
-    sendPayment: "Send Payment",
-  },
-} as const
+import Header from "./components/header"
+import FedimintSpendNotes from "./components/handlers/fedimint-spend-notes"
+import WeblnMakeInvoice from "./components/handlers/webln-make-invoice"
+import WeblnSendPayment from "./components/handlers/webln-send-payment"
+import NostrSignEvent from "./components/handlers/nostr-sign-event"
 
 export default function Prompt() {
-  const [amount, setAmount] = useState<number>(0)
-  const [description, setDescription] = useState<string>("")
-  const [loading, setLoading] = useState(false)
   const url = new URL(window.location.href)
-
   const params = new URLSearchParams(url.search)
-
   const method = params.get("method")
   const methodParams = params.get("params")
   const mod = params.get("module") as WindowModuleKind | null
-
   const parsedParams = methodParams === null ? null : JSON.parse(methodParams)
 
   if (!windowModule.includes((mod ?? "") as any) || method === null)
-    return <Container>Error</Container>
+    return <ErrorContainer>Error</ErrorContainer>
 
-  const titleModule = titleKeys[mod as WindowModuleKind]
-
-  let contentComponent: React.ReactNode = null
-
-  useEffect(() => {
-    if (mod === "webln" && method === "makeInvoice") {
-      const args = parsedParams as {
-        amount?: string | number
-        defaultAmount?: string | number
-        minimumAmount?: string | number
-        maximumAmount?: string | number
-      }
-
-      setAmount(
-        Number(args?.amount || args?.defaultAmount || args?.minimumAmount || 0),
-      )
-    }
-  }, [mod, method, parsedParams])
+  let content: React.ReactNode | null = null
 
   if (mod === "fedimint") {
-    if (method === "generateEcash") {
-      contentComponent = (
-        <Flex col className="divide-y divide-gray-600/50 w-full">
-          {Object.entries(parsedParams as any).map(([key, value]) => (
-            <Flex
-              key={key}
-              gap={4}
-              justify="between"
-              align="start"
-              className="py-1"
-            >
-              <Text
-                size="sm"
-                weight="medium"
-                className="text-gray-300 whitespace-nowrap shrink-0"
-              >
-                {key}
-              </Text>
-              <Text size="sm" className="text-gray-400 break-all" multiline>
-                {JSON.stringify(value)}
-              </Text>
-            </Flex>
-          ))}
-        </Flex>
-      )
-    } else if (method === "receiveEcash") {
-      contentComponent = (
-        <Text size="sm" className="text-gray-500 break-all w-full" multiline>
-          {parsedParams as string}
-        </Text>
-      )
-    }
-  } else if (mod === "nostr") {
-    if (method === "signEvent") {
-      contentComponent = (
-        <Flex col className="divide-y divide-gray-600/50 w-full">
-          {Object.entries(parsedParams as any).map(([key, value]) => (
-            <Flex
-              key={key}
-              gap={4}
-              justify="between"
-              align="start"
-              className="py-1"
-            >
-              <Text
-                size="sm"
-                weight="medium"
-                className="text-gray-300 whitespace-nowrap shrink-0"
-              >
-                {key}
-              </Text>
-              <Text size="sm" className="text-gray-400 break-all" multiline>
-                {JSON.stringify(value)}
-              </Text>
-            </Flex>
-          ))}
-        </Flex>
-      )
+    if (method === "spendNotes") {
+      content = <FedimintSpendNotes method={method} params={parsedParams} />
     }
   } else if (mod === "webln") {
     if (method === "makeInvoice") {
-      const args = parsedParams as {
-        amount?: string | number
-        defaultAmount?: string | number
-        minimumAmount?: string | number
-        maximumAmount?: string | number
-        defaultMemo?: string
-      }
-
-      contentComponent = (
-        <Flex col gap={2} className="w-full">
-          <Flex col gap={1}>
-            <Text>Amount</Text>
-            <Input
-              disabled={"amount" in args}
-              value={amount}
-              min={args?.minimumAmount ? Number(args.minimumAmount) : undefined}
-              max={args?.maximumAmount ? Number(args.maximumAmount) : undefined}
-              onChange={e => setAmount(Number(e.target.value))}
-              type="number"
-              inputMode="numeric"
-              className="w-full"
-            />
-          </Flex>
-          <Flex col gap={1}>
-            <Text>Memo</Text>
-            <Input asChild>
-              <textarea
-                maxLength={255}
-                className="resize-y min-h-[60px]"
-                placeholder="Memo..."
-                rows={3}
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-              ></textarea>
-            </Input>
-          </Flex>
-        </Flex>
-      )
+      content = <WeblnMakeInvoice method={method} params={parsedParams} />
     } else if (method === "sendPayment") {
-      contentComponent = (
-        <Text size="sm" className="text-gray-500 break-all w-full" multiline>
-          {JSON.stringify(parsedParams)}
-        </Text>
-      )
+      content = <WeblnSendPayment method={method} params={parsedParams} />
+    }
+  } else if (mod === "nostr") {
+    if (method === "signEvent") {
+      content = <NostrSignEvent method={method} params={parsedParams} />
     }
   }
 
@@ -185,85 +55,12 @@ export default function Prompt() {
         ),
       }}
     >
-      <Flex
-        justify="between"
-        gap={2}
-        align="center"
-        p={2}
-        className="border-b border-gray-600"
-      >
-        <Flex gap={2} align="center">
-          <img
-            src={browser.runtime.getURL("logo.svg")}
-            alt="logo"
-            width={32}
-            height={32}
-          />
-          <Text size="h1" weight="bold" asChild>
-            <h1>Browsimint</h1>
-          </Text>
-        </Flex>
-        {/* switcher / nostr icon*/}
-      </Flex>
-
-      <Flex col p={4} gap={4} grow>
-        <Flex grow col align="center" gap={4}>
-          <Text weight="medium" size="lg">
-            {titleModule[method as keyof typeof titleModule]}
-          </Text>
-
-          {contentComponent}
-        </Flex>
-        <Flex gap={2} align="center">
-          <Button
-            onClick={() => {
-              sendExtensionMessage({
-                type: "prompt",
-                accept: false,
-                method,
-              })
-            }}
-            variant="secondary"
-            fullWidth
-            grow
-          >
-            Deny
-          </Button>
-          <Button
-            onClick={() => {
-              setLoading(true)
-
-              if (mod === "webln" && method === "makeInvoice") {
-                sendExtensionMessage({
-                  type: "prompt",
-                  accept: true,
-                  method,
-                  params: {
-                    amount,
-                    description,
-                  },
-                })
-              } else {
-                sendExtensionMessage({
-                  type: "prompt",
-                  accept: true,
-                  method: method as any,
-                  params: parsedParams,
-                })
-              }
-            }}
-            fullWidth
-            grow
-            disabled={loading}
-          >
-            Approve
-          </Button>
-        </Flex>
-      </Flex>
+      <Header />
+      {content}
     </Flex>
   )
 }
 
-const Container = styled("div", {
+const ErrorContainer = styled("div", {
   base: "flex flex-col items-center justify-center h-screen",
 })

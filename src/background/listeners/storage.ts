@@ -5,7 +5,7 @@ import { LocalStore } from "@common/storage"
 import { FedimintWallet } from "@fedimint/core-web"
 import { Storage } from "webextension-polyfill"
 import {
-  balanceSubscription,
+  unsubscribeBalance,
   setUnsubscribeBalance,
   setWallet,
   wallet,
@@ -20,7 +20,7 @@ export async function handleStorageChange(
     switch (item) {
       case "activeFederation":
         if (wallet.isOpen()) {
-          balanceSubscription()
+          unsubscribeBalance()
           await wallet.cleanup()
           setWallet(new FedimintWallet())
 
