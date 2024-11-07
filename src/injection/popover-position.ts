@@ -2,33 +2,33 @@
  * Represents a position with top and left coordinates
  */
 export interface Position {
-  top: number;
-  left: number;
+  top: number
+  left: number
 }
 
 /**
  * Represents dimensions with width and height
  */
 export interface Dimensions {
-  width: number;
-  height: number;
+  width: number
+  height: number
 }
 
 /**
  * Represents a position with an additional placement property
  */
 export interface PopoverPosition extends Position {
-  placement: 'top' | 'right' | 'bottom' | 'left';
+  placement: "top" | "right" | "bottom" | "left"
 }
 
 /**
  * Represents the available space around a target element
  */
 export interface AvailableSpace {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
+  top: number
+  right: number
+  bottom: number
+  left: number
 }
 
 /**
@@ -36,14 +36,14 @@ export interface AvailableSpace {
  */
 function calculateAvailableSpace(
   targetRect: DOMRect,
-  padding: number = 20
+  padding: number = 20,
 ): AvailableSpace {
   return {
     top: targetRect.top - padding,
     right: window.innerWidth - targetRect.right - padding,
     bottom: window.innerHeight - targetRect.bottom - padding,
     left: targetRect.left - padding,
-  };
+  }
 }
 
 /**
@@ -52,50 +52,58 @@ function calculateAvailableSpace(
 function doesOverlapWithTarget(
   position: Position,
   popoverDimensions: Dimensions,
-  targetRect: DOMRect
+  targetRect: DOMRect,
 ): boolean {
   const popoverRect = {
     left: position.left,
     right: position.left + popoverDimensions.width,
     top: position.top,
-    bottom: position.top + popoverDimensions.height
-  };
+    bottom: position.top + popoverDimensions.height,
+  }
 
   return !(
     popoverRect.right < targetRect.left ||
     popoverRect.left > targetRect.right ||
     popoverRect.bottom < targetRect.top ||
     popoverRect.top > targetRect.bottom
-  );
+  )
 }
 
 /**
  * Checks if there is enough space for the popover in a given placement
  */
 function hasEnoughSpace(
-  placement: 'top' | 'right' | 'bottom' | 'left',
+  placement: "top" | "right" | "bottom" | "left",
   space: AvailableSpace,
   dimensions: Dimensions,
   targetRect: DOMRect,
-  padding: number
+  padding: number,
 ): boolean {
   switch (placement) {
-    case 'top':
-      return space.top >= dimensions.height + padding &&
-             space.left + targetRect.width >= dimensions.width / 2 &&
-             space.right + targetRect.width >= dimensions.width / 2;
-    case 'right':
-      return space.right >= dimensions.width + padding &&
-             space.top + targetRect.height >= dimensions.height / 2 &&
-             space.bottom + targetRect.height >= dimensions.height / 2;
-    case 'bottom':
-      return space.bottom >= dimensions.height + padding &&
-             space.left + targetRect.width >= dimensions.width / 2 &&
-             space.right + targetRect.width >= dimensions.width / 2;
-    case 'left':
-      return space.left >= dimensions.width + padding &&
-             space.top + targetRect.height >= dimensions.height / 2 &&
-             space.bottom + targetRect.height >= dimensions.height / 2;
+    case "top":
+      return (
+        space.top >= dimensions.height + padding &&
+        space.left + targetRect.width >= dimensions.width / 2 &&
+        space.right + targetRect.width >= dimensions.width / 2
+      )
+    case "right":
+      return (
+        space.right >= dimensions.width + padding &&
+        space.top + targetRect.height >= dimensions.height / 2 &&
+        space.bottom + targetRect.height >= dimensions.height / 2
+      )
+    case "bottom":
+      return (
+        space.bottom >= dimensions.height + padding &&
+        space.left + targetRect.width >= dimensions.width / 2 &&
+        space.right + targetRect.width >= dimensions.width / 2
+      )
+    case "left":
+      return (
+        space.left >= dimensions.width + padding &&
+        space.top + targetRect.height >= dimensions.height / 2 &&
+        space.bottom + targetRect.height >= dimensions.height / 2
+      )
   }
 }
 
@@ -105,19 +113,19 @@ function hasEnoughSpace(
 function adjustForViewportBounds(
   position: PopoverPosition,
   dimensions: Dimensions,
-  padding: number
+  padding: number,
 ): PopoverPosition {
   // Adjust horizontal position
-  const minLeft = padding;
-  const maxLeft = window.innerWidth - dimensions.width - padding;
-  position.left = Math.max(minLeft, Math.min(position.left, maxLeft));
+  const minLeft = padding
+  const maxLeft = window.innerWidth - dimensions.width - padding
+  position.left = Math.max(minLeft, Math.min(position.left, maxLeft))
 
   // Adjust vertical position
-  const minTop = padding;
-  const maxTop = window.innerHeight - dimensions.height - padding;
-  position.top = Math.max(minTop, Math.min(position.top, maxTop));
+  const minTop = padding
+  const maxTop = window.innerHeight - dimensions.height - padding
+  position.top = Math.max(minTop, Math.min(position.top, maxTop))
 
-  return position;
+  return position
 }
 
 /**
@@ -126,36 +134,36 @@ function adjustForViewportBounds(
 function calculateCoordinates(
   targetRect: DOMRect,
   popoverDimensions: Dimensions,
-  placement: 'top' | 'right' | 'bottom' | 'left',
-  padding: number
+  placement: "top" | "right" | "bottom" | "left",
+  padding: number,
 ): PopoverPosition {
-  let top: number;
-  let left: number;
+  let top: number
+  let left: number
 
   switch (placement) {
-    case 'top':
-      top = targetRect.top - popoverDimensions.height - padding;
-      left = targetRect.left + (targetRect.width - popoverDimensions.width) / 2;
-      break;
-    case 'right':
-      top = targetRect.top + (targetRect.height - popoverDimensions.height) / 2;
-      left = targetRect.right + padding;
-      break;
-    case 'bottom':
-      top = targetRect.bottom + padding;
-      left = targetRect.left + (targetRect.width - popoverDimensions.width) / 2;
-      break;
-    case 'left':
-      top = targetRect.top + (targetRect.height - popoverDimensions.height) / 2;
-      left = targetRect.left - popoverDimensions.width - padding;
-      break;
+    case "top":
+      top = targetRect.top - popoverDimensions.height - padding
+      left = targetRect.left + (targetRect.width - popoverDimensions.width) / 2
+      break
+    case "right":
+      top = targetRect.top + (targetRect.height - popoverDimensions.height) / 2
+      left = targetRect.right + padding
+      break
+    case "bottom":
+      top = targetRect.bottom + padding
+      left = targetRect.left + (targetRect.width - popoverDimensions.width) / 2
+      break
+    case "left":
+      top = targetRect.top + (targetRect.height - popoverDimensions.height) / 2
+      left = targetRect.left - popoverDimensions.width - padding
+      break
   }
 
   return adjustForViewportBounds(
     { top, left, placement },
     popoverDimensions,
-    padding
-  );
+    padding,
+  )
 }
 
 /**
@@ -165,39 +173,45 @@ function adjustPositionToMinimizeOverlap(
   position: PopoverPosition,
   popoverDimensions: Dimensions,
   targetRect: DOMRect,
-  padding: number
+  padding: number,
 ): PopoverPosition {
-  const { placement } = position;
-  let { top, left } = position;
+  const { placement } = position
+  let { top, left } = position
 
   switch (placement) {
-    case 'top':
-    case 'bottom':
-      if (left + popoverDimensions.width > targetRect.left && left < targetRect.right) {
+    case "top":
+    case "bottom":
+      if (
+        left + popoverDimensions.width > targetRect.left &&
+        left < targetRect.right
+      ) {
         if (targetRect.left > window.innerWidth / 2) {
-          left = targetRect.left - popoverDimensions.width - padding;
+          left = targetRect.left - popoverDimensions.width - padding
         } else {
-          left = targetRect.right + padding;
+          left = targetRect.right + padding
         }
       }
-      break;
-    case 'left':
-    case 'right':
-      if (top + popoverDimensions.height > targetRect.top && top < targetRect.bottom) {
+      break
+    case "left":
+    case "right":
+      if (
+        top + popoverDimensions.height > targetRect.top &&
+        top < targetRect.bottom
+      ) {
         if (targetRect.top > window.innerHeight / 2) {
-          top = targetRect.top - popoverDimensions.height - padding;
+          top = targetRect.top - popoverDimensions.height - padding
         } else {
-          top = targetRect.bottom + padding;
+          top = targetRect.bottom + padding
         }
       }
-      break;
+      break
   }
 
   return adjustForViewportBounds(
     { top, left, placement },
     popoverDimensions,
-    padding
-  );
+    padding,
+  )
 }
 
 /**
@@ -210,44 +224,52 @@ function adjustPositionToMinimizeOverlap(
 export function calculateOptimalPopoverPosition(
   targetRect: DOMRect,
   popoverDimensions: Dimensions,
-  padding: number = 20
+  padding: number = 20,
 ): PopoverPosition {
-  const availableSpace = calculateAvailableSpace(targetRect, padding);
-  const preferredOrder: Array<'top' | 'right' | 'bottom' | 'left'> = [
-    'bottom',
-    'right',
-    'top',
-    'left',
-  ];
+  const availableSpace = calculateAvailableSpace(targetRect, padding)
+  const preferredOrder: Array<"top" | "right" | "bottom" | "left"> = [
+    "bottom",
+    "right",
+    "top",
+    "left",
+  ]
 
   // Try each position until we find one that doesn't overlap
   for (const placement of preferredOrder) {
-    if (hasEnoughSpace(placement, availableSpace, popoverDimensions, targetRect, padding)) {
+    if (
+      hasEnoughSpace(
+        placement,
+        availableSpace,
+        popoverDimensions,
+        targetRect,
+        padding,
+      )
+    ) {
       const position = calculateCoordinates(
         targetRect,
         popoverDimensions,
         placement,
-        padding
-      );
-      
+        padding,
+      )
+
       if (!doesOverlapWithTarget(position, popoverDimensions, targetRect)) {
-        return position;
+        return position
       }
     }
   }
-  
+
   // If all positions overlap, use the first available position with maximum distance
   const fallbackPosition = calculateCoordinates(
     targetRect,
     popoverDimensions,
     preferredOrder[0],
-    padding
-  );
-  
+    padding,
+  )
+
   return adjustPositionToMinimizeOverlap(
     fallbackPosition,
     popoverDimensions,
     targetRect,
-    padding
-  );
+    padding,
+  )
 }

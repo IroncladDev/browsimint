@@ -1,11 +1,7 @@
 import Flex from "@/common/ui/flex"
 import Text from "@/common/ui/text"
 
-export default function KVTable({
-  data,
-}: {
-  data: Record<string, any>
-}) {
+export default function KVTable({ data }: { data: Record<string, any> }) {
   return (
     <Flex col className="divide-y divide-gray-600/50 w-full">
       {Object.entries(data).map(([key, value]) => (

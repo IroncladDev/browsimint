@@ -1,9 +1,9 @@
 "use client"
 
+import { AnimatePresence, motion } from "framer-motion"
 import {
   Toast,
   ToastClose,
-  ToastDescription,
   ToastProvider,
   ToastTitle,
   ToastViewport,
@@ -15,20 +15,35 @@ export function Toaster() {
 
   return (
     <ToastProvider swipeDirection="up">
-      {toasts.map(function ({ id, title, description, ...props }) {
-        return (
-          <Toast key={id} {...props}>
-            <div className="grid gap-1">
-              {title && <ToastTitle>{title}</ToastTitle>}
-              {description && (
-                <ToastDescription>{description}</ToastDescription>
-              )}
-            </div>
-            <ToastClose />
-          </Toast>
-        )
-      })}
+      <AnimatePresence mode="wait">
+        {toasts.map(({ id, title, ...props }) => (
+          <ToastItem key={id} {...props} title={title} />
+        ))}
+      </AnimatePresence>
       <ToastViewport />
     </ToastProvider>
+  )
+}
+
+function ToastItem({
+  title,
+  ...props
+}: React.ComponentProps<typeof Toast> & { title: React.ReactNode }) {
+  return (
+    <Toast {...props} asChild>
+      <motion.div
+        className="grid gap-1"
+        initial={{ opacity: 0, translateY: "-100%" }}
+        animate={{ opacity: 1, translateY: "0%" }}
+        transition={{
+          type: "ease-out",
+          duration: 0.05,
+        }}
+        // key={props.key}
+      >
+        {title && <ToastTitle>{title}</ToastTitle>}
+        <ToastClose />
+      </motion.div>
+    </Toast>
   )
 }

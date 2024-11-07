@@ -1,7 +1,7 @@
 import { messagePromptChoice } from "@common/schemas"
 import { MessagePromptChoice } from "@common/types"
 import browser from "webextension-polyfill"
-import { windowPrompt, releasePromptMutex, setWindowPrompt } from "../state"
+import { releasePromptMutex, setWindowPrompt, windowPrompt } from "../state"
 
 export async function handlePromptMessage(
   msg: MessagePromptChoice,

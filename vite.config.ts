@@ -1,6 +1,7 @@
 import react from "@vitejs/plugin-react"
 import path from "path"
 import { defineConfig } from "vite"
+import { nodePolyfills } from "vite-plugin-node-polyfills"
 import topLevelAwait from "vite-plugin-top-level-await"
 import wasm from "vite-plugin-wasm"
 import webExtension, { readJsonFile } from "vite-plugin-web-extension"
@@ -26,6 +27,11 @@ export default defineConfig({
     },
   },
   plugins: [
+    nodePolyfills({
+      globals: {
+        Buffer: true,
+      },
+    }),
     react(),
     wasm(),
     topLevelAwait(),

@@ -26,7 +26,7 @@ export default function Switcher() {
         </Outer>
       </SheetTrigger>
       <SheetContent>
-        <Flex col gap={4}>
+        <Flex col gap={4} p={2}>
           <Flex col gap={2}>
             {federations
               .filter(x => state.federations.some(f => f.id === x.id))

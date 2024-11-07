@@ -5,9 +5,9 @@ import { LocalStore } from "@common/storage"
 import { FedimintWallet } from "@fedimint/core-web"
 import { Storage } from "webextension-polyfill"
 import {
-  unsubscribeBalance,
   setUnsubscribeBalance,
   setWallet,
+  unsubscribeBalance,
   wallet,
 } from "../state"
 

@@ -1,7 +1,12 @@
 import { messageInternalCall } from "@common/schemas"
 import { LocalStore } from "@common/storage"
 import { MessageInternalCall } from "@common/types"
-import { Duration, GatewayInfo, JSONObject } from "@fedimint/core-web"
+import {
+  Duration,
+  GatewayInfo,
+  JSONObject,
+  LnReceiveState,
+} from "@fedimint/core-web"
 import { wallet } from "../state"
 
 export default async function handleInternalMessage(msg: MessageInternalCall) {
@@ -39,6 +44,22 @@ export default async function handleInternalMessage(msg: MessageInternalCall) {
       await wallet.mint.redeemEcash(params.notes)
 
       return await wallet.mint.parseNotes(params.notes)
+    case "awaitInvoice":
+      return await new Promise<LnReceiveState>((resolve, reject) => {
+        const unsubscribe = wallet.lightning.subscribeLnReceive(
+          params.operationId,
+          res => {
+            if (res === "claimed") {
+              unsubscribe()
+              resolve(res)
+            }
+          },
+          err => {
+            unsubscribe()
+            reject(err)
+          },
+        )
+      })
   }
 }
 
@@ -74,5 +95,11 @@ export type InternalParams =
       method: "redeemEcash"
       params: {
         notes: string
+      }
+    }
+  | {
+      method: "awaitInvoice"
+      params: {
+        operationId: string
       }
     }

@@ -3,7 +3,7 @@ import { LocalStore } from "@common/storage"
 import browser from "webextension-polyfill"
 import { handleMessage } from "./listeners/message"
 import { handleStorageChange } from "./listeners/storage"
-import { unsubscribeBalance, setUnsubscribeBalance, wallet } from "./state"
+import { setUnsubscribeBalance, unsubscribeBalance, wallet } from "./state"
 
 export const initWallet = async () => {
   const activeFederation = await LocalStore.getActiveFederation()

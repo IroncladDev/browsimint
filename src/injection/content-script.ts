@@ -21,15 +21,6 @@ window.addEventListener("message", async windowMsg => {
 
   const activeElement = document.activeElement
 
-  let rect: DOMRect | null = null
-
-  if (activeElement && isInteractiveElement(activeElement)) {
-    rect = activeElement.getBoundingClientRect()
-  }
-
-  // pass on to background
-  let response
-
   const message = res.data
 
   const msg: MessageModuleCall = {
@@ -39,24 +30,30 @@ window.addEventListener("message", async windowMsg => {
     method: message.method,
     params: message.params,
     windowPos: [
-      window.innerWidth / 2 - promptWidth / 2,
-      window.innerHeight / 2 - promptHeight / 2,
+      window.innerWidth - 20 - promptHeight,
+      window.innerHeight - 20 - promptWidth,
     ],
   }
 
-  try {
-    if (rect) {
-      const pos = calculateOptimalPopoverPosition(
-        rect,
-        { width: promptWidth, height: promptHeight },
-        20,
-      )
-      msg.windowPos = [
-        pos.left + window.screenX + (window.outerWidth - window.innerWidth),
-        pos.top + window.screenY + (window.outerHeight - window.innerHeight),
-      ]
-    }
+  if (activeElement && isInteractiveElement(activeElement)) {
+    const rect = activeElement.getBoundingClientRect()
 
+    const pos = calculateOptimalPopoverPosition(
+      rect,
+      { width: promptWidth, height: promptHeight },
+      20,
+    )
+
+    msg.windowPos = [
+      pos.left + window.screenX + (window.outerWidth - window.innerWidth),
+      pos.top + window.screenY + (window.outerHeight - window.innerHeight),
+    ]
+  }
+
+  // pass on to background
+  let response
+
+  try {
     response = await sendExtensionMessage(msg)
   } catch (error) {
     response = { success: false, message: (error as Error).message }

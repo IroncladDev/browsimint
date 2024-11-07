@@ -25,9 +25,9 @@ export const setUnsubscribeBalance = (subscription: () => void) =>
   (unsubscribeBalance = subscription)
 
 export {
-  unsubscribeBalance,
-  windowPrompt,
   promptMutex,
   releasePromptMutex,
+  unsubscribeBalance,
   wallet,
+  windowPrompt,
 }

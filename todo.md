@@ -7,7 +7,7 @@
 - [x] Bring-your-own nsec
 - [x] Federation switching
 - [x] Functionalize popup
-- [ ] Fix window positioning
+- [x] Fix window positioning
 - [ ] Open window in bottom-right corner if no focused element
 - [ ] Add custom federations
 - [ ] Nsec validation

@@ -4,11 +4,11 @@ import { WindowModuleKind } from "@common/types"
 import Flex from "@common/ui/flex"
 import { styled } from "react-tailwind-variants"
 import colors from "tailwindcss/colors"
-import Header from "./components/header"
 import FedimintSpendNotes from "./components/handlers/fedimint-spend-notes"
+import NostrSignEvent from "./components/handlers/nostr-sign-event"
 import WeblnMakeInvoice from "./components/handlers/webln-make-invoice"
 import WeblnSendPayment from "./components/handlers/webln-send-payment"
-import NostrSignEvent from "./components/handlers/nostr-sign-event"
+import Header from "./components/header"
 
 export default function Prompt() {
   const url = new URL(window.location.href)

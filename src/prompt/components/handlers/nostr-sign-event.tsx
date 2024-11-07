@@ -1,7 +1,7 @@
 import { NostrParams } from "@/background/handlers/nostr"
+import { sendExtensionMessage } from "@/common/messaging/extension"
 import ConfirmationBase from "../base"
 import KVTable from "../kv-table"
-import { sendExtensionMessage } from "@/common/messaging/extension"
 
 export default function NostrSignEvent({
   method,

@@ -1,9 +1,9 @@
-import ConfirmationBase from "../base"
-import { useState } from "react"
+import { sendExtensionMessage } from "@/common/messaging/extension"
 import Flex from "@/common/ui/flex"
 import Input from "@/common/ui/input"
 import Text from "@/common/ui/text"
-import { sendExtensionMessage } from "@/common/messaging/extension"
+import { useState } from "react"
+import ConfirmationBase from "../base"
 
 export default function WeblnMakeInvoice({
   method,
