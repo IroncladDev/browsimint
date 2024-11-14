@@ -7,7 +7,7 @@ export function QrCode({ value }: { value: string }) {
       size={256}
       className="h-auto max-w-[256px] w-full"
       bgColor="#0000"
-      fgColor={colors.sky["200"]}
+      fgColor={colors.sky["200"] + "f6"}
       value={value}
       viewBox={`0 0 256 256`}
     />

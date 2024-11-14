@@ -1,4 +1,3 @@
-import gr from "@common/gradients"
 import Flex from "@common/ui/flex"
 import Text from "@common/ui/text"
 import { motion } from "framer-motion"
@@ -11,22 +10,12 @@ import IntroOnboarding from "./onboarding/intro"
 import NostrOnboarding from "./onboarding/nostr"
 import { useAppState } from "./state"
 import ReceiveEcash from "./widgets/receive-ecash"
-import ReceiveLN from "./widgets/receive-ln"
 import SendEcash from "./widgets/send-ecash"
-import SendLN from "./widgets/send-ln"
+import ReceiveLN from "./components/receive/lightning"
+import SendLN from "./components/send/lightning"
 
 export default function Popup() {
   const state = useAppState()
-
-  const background = gr.merge(
-    gr.radial(
-      "circle at 50% 120%",
-      colors.sky["700"] + "f6",
-      colors.sky["800"] + "e8 20%",
-      "transparent 70%",
-      "transparent",
-    ),
-  )
 
   if (
     state.onboardingStep === 0 &&
@@ -50,7 +39,7 @@ export default function Popup() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        style={{ background }}
+        style={{ background: `radial-gradient(circle at 50% 120%, ${colors.sky["700"]}f6, ${colors.sky["800"]}e8 20%, transparent 70%, transparent)` }}
       >
         <Flex justify="center">
           <Switcher />

@@ -1,13 +1,8 @@
 # TODO
 
-- [x] Permissions
-- [x] Webln injection
-- [x] Nostr injection
-- [x] Fedimint injection
-- [x] Bring-your-own nsec
-- [x] Federation switching
-- [x] Functionalize popup
-- [x] Fix window positioning
+- [ ] Permissions
+- [ ] Pay lightning addresses
+- [ ] Offload wasmclient
 - [ ] Open window in bottom-right corner if no focused element
 - [ ] Add custom federations
 - [ ] Nsec validation

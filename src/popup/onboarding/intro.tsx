@@ -1,44 +1,31 @@
-import gr from "@common/gradients"
 import Button from "@common/ui/button"
 import Flex from "@common/ui/flex"
 import Text from "@common/ui/text"
-import { motion, useMotionValue, useSpring } from "framer-motion"
-import { useCallback, useEffect } from "react"
+import {
+  motion,
+  useMotionTemplate,
+  useSpring,
+  useTransform,
+} from "framer-motion"
+import { useEffect } from "react"
 import colors from "tailwindcss/colors"
 import { useAppState } from "../state"
 
 export default function IntroOnboarding() {
   const state = useAppState()
 
-  const gradient = useCallback((p: number) => {
-    return gr.merge(
-      gr.radial(
-        `circle at 50% 120%`,
-        colors.sky["700"] + "f6",
-        colors.sky["800"] + "e8 20%",
-        "transparent 70%",
-        "transparent",
-      ),
-      gr.rRadial(
-        "circle at 50% 100%",
-        ...gr.stack(
-          ["#0000", `${25 + (1 - p) * 25}vh`],
-          [colors.gray["500"] + "55", `calc(${25 + (1 - p) * 25}vh + 2px)`],
-        ),
-      ),
-    )
-  }, [])
-
-  const initialBackground = useMotionValue(gradient(0))
-  const background = useSpring(initialBackground, {
+  const bgSpring = useSpring(1, {
     damping: 25,
   })
+  const bgTransform = useTransform(() => 25 + bgSpring.get() * 25)
+  const background = useMotionTemplate`radial-gradient(circle at 50% 120%, ${colors.sky["700"]}f6, ${colors.sky["800"]}e8 20%, transparent 70%, transparent),
+repeating-radial-gradient(circle at 50% 100%, transparent, transparent ${bgTransform}vh, ${colors.gray["500"]}55 calc(${bgTransform}vh + 2px))`
 
   useEffect(() => {
-    if (background) {
-      background.set(gradient(1))
+    if (bgSpring) {
+      bgSpring.set(0)
     }
-  }, [gradient, background])
+  }, [bgSpring])
 
   return (
     <Flex col gap={6} p={4} center className="h-screen" asChild>

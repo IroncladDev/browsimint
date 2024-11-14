@@ -1,5 +1,4 @@
 import { windowModule } from "@common/constants"
-import gr from "@common/gradients"
 import { WindowModuleKind } from "@common/types"
 import Flex from "@common/ui/flex"
 import { styled } from "react-tailwind-variants"
@@ -44,15 +43,7 @@ export default function Prompt() {
       col
       className="h-screen"
       style={{
-        background: gr.merge(
-          gr.radial(
-            "circle at -10% -10%",
-            colors.sky["700"] + "f6",
-            colors.sky["800"] + "e8 20%",
-            "transparent 60%",
-            "transparent",
-          ),
-        ),
+        background: `radial-gradient(circle at -10% -10%, ${colors.sky["700"]}f6, ${colors.sky["800"]}e8 20%, transparent 60%, transparent)`,
       }}
     >
       <Header />

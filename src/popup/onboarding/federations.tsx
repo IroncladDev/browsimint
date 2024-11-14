@@ -1,12 +1,16 @@
 import { FederationItemSchema } from "@/common/types"
 import { federations } from "@common/constants"
-import gr from "@common/gradients"
 import { LocalStore } from "@common/storage"
 import Button from "@common/ui/button"
 import Flex from "@common/ui/flex"
 import Text from "@common/ui/text"
-import { motion, useMotionValue, useSpring } from "framer-motion"
-import { useCallback, useEffect, useState } from "react"
+import {
+  motion,
+  useMotionTemplate,
+  useSpring,
+  useTransform,
+} from "framer-motion"
+import { useEffect, useState } from "react"
 import colors from "tailwindcss/colors"
 import SelectableFederation from "../components/selectable-federation"
 import { useAppState } from "../state"
@@ -16,45 +20,24 @@ export default function FederationsOnboarding() {
     Array<FederationItemSchema>
   >([])
   const state = useAppState()
-  const gradient = useCallback((p: number) => {
-    const rotateFactor = p * 30
-    const sizeFactor = p * 100
 
-    return gr.merge(
-      gr.radial(
-        `circle at ${50 + 60 * p}% ${110 - 110 * p}%`,
-        colors.sky["700"] + "f6",
-        colors.sky["800"] + "c5 100px",
-        "transparent 300px",
-        "transparent",
-      ),
-      gr.rLinear(
-        -5 + rotateFactor,
-        ...gr.stack(
-          ["transparent", 50 + sizeFactor],
-          [colors.gray["500"] + "25", 52 + sizeFactor],
-        ),
-      ),
-      gr.rLinear(
-        -95 + rotateFactor,
-        ...gr.stack(
-          ["transparent", 50 + sizeFactor],
-          [colors.gray["500"] + "25", 52 + sizeFactor],
-        ),
-      ),
-    )
-  }, [])
-
-  const initialBackground = useMotionValue(gradient(0))
-  const background = useSpring(initialBackground, {
+  const bgSpring = useSpring(0, {
     damping: 25,
   })
 
+  const mainCircle = useTransform(() => `radial-gradient(circle at ${50 + 60 * bgSpring.get()}% ${110 - 110 * bgSpring.get()}%, ${colors.sky["700"]}f6, ${colors.sky["800"]}c5 100px, transparent 300px, transparent)`)
+  const gridX = useTransform(() => `repeating-linear-gradient(${-5 + 30 * bgSpring.get()}deg, transparent 0px, transparent ${50 + 100 * bgSpring.get()}px, ${colors.gray["500"]}25 ${52 + 100 * bgSpring.get()}px)`)
+  const gridY = useTransform(() => `repeating-linear-gradient(${-95 + 30 * bgSpring.get()}deg, transparent 0px, transparent ${50 + 100 * bgSpring.get()}px, ${colors.gray["500"]}25 ${52 + 100 * bgSpring.get()}px)`)
+
+  const background = useMotionTemplate`${mainCircle}, ${gridX}, ${gridY}`
+
+  console.log(background)
+
   useEffect(() => {
-    if (background) {
-      background.set(gradient(1))
+    if (bgSpring) {
+      bgSpring.set(1)
     }
-  }, [gradient, background])
+  }, [bgSpring])
 
   return (
     <Flex
