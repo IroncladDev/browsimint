@@ -12,8 +12,8 @@ import {
 } from "framer-motion"
 import { useEffect, useState } from "react"
 import colors from "tailwindcss/colors"
-import SelectableFederation from "../components/selectable-federation"
-import { useAppState } from "../state"
+import { useAppState } from "../app-state-provider"
+import SelectableFederation from "../selectable-federation"
 
 export default function FederationsOnboarding() {
   const [selectedFederations, setSelectedFederations] = useState<

@@ -4,15 +4,15 @@ import { motion } from "framer-motion"
 import { Landmark, Zap } from "lucide-react"
 import { styled } from "react-tailwind-variants"
 import colors from "tailwindcss/colors"
-import Switcher from "./components/switcher"
-import FederationsOnboarding from "./onboarding/federations"
-import IntroOnboarding from "./onboarding/intro"
-import NostrOnboarding from "./onboarding/nostr"
-import { useAppState } from "./state"
-import ReceiveEcash from "./widgets/receive-ecash"
-import SendEcash from "./widgets/send-ecash"
-import ReceiveLN from "./components/receive/lightning"
-import SendLN from "./components/send/lightning"
+import { useAppState } from "@/popup/components/app-state-provider"
+import IntroOnboarding from "./onboarding-intro"
+import FederationsOnboarding from "./onboarding-federations"
+import NostrOnboarding from "./onboarding-nostr"
+import Switcher from "../federation-switcher"
+import ReceiveLN from "../(dialogs)/receive-lightning"
+import ReceiveEcash from "../(dialogs)/receive-ecash "
+import SendLN from "../(dialogs)/send-lightning"
+import SendEcash from "../(dialogs)/send-ecash"
 
 export default function Popup() {
   const state = useAppState()
@@ -39,16 +39,16 @@ export default function Popup() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        style={{ background: `radial-gradient(circle at 50% 120%, ${colors.sky["700"]}f6, ${colors.sky["800"]}e8 20%, transparent 70%, transparent)` }}
+        style={{
+          background: `radial-gradient(circle at 50% 120%, ${colors.sky["700"]}f6, ${colors.sky["800"]}e8 20%, transparent 70%, transparent)`,
+        }}
       >
         <Flex justify="center">
           <Switcher />
         </Flex>
-
         <Flex col center width="full" className="py-6">
           <Text size="h1">{Math.floor(state.balance / 1000)} sats</Text>
         </Flex>
-
         <Fieldset>
           <Legend>
             <Text color="dimmer" size="lg">
@@ -61,7 +61,6 @@ export default function Popup() {
             <SendLN />
           </Flex>
         </Fieldset>
-
         <Fieldset>
           <Legend>
             <Text color="dimmer" size="lg">

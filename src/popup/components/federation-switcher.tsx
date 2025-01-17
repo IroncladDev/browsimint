@@ -7,8 +7,9 @@ import Text from "@common/ui/text"
 import { ChevronDown } from "lucide-react"
 import { useState } from "react"
 import { styled } from "react-tailwind-variants"
-import { useAppState } from "../state"
+import { useAppState } from "@/popup/components/app-state-provider"
 import SelectableFederation from "./selectable-federation"
+import AddFederation from "./(dialogs)/add-federation"
 
 export default function Switcher() {
   const [open, setOpen] = useState(false)
@@ -43,7 +44,7 @@ export default function Switcher() {
               ))}
           </Flex>
           <Flex col gap={2}>
-            <Button>Add New</Button>
+            <AddFederation />
             <Button variant="secondary" size="small">
               Manage
             </Button>

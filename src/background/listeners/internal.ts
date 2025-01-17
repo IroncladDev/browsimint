@@ -60,6 +60,8 @@ export default async function handleInternalMessage(msg: MessageInternalCall) {
           },
         )
       })
+    case "checkInvite":
+      await wallet.federation.getConfig()
   }
 }
 

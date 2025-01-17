@@ -9,7 +9,7 @@ import { styled } from "react-tailwind-variants"
 import { motion } from "framer-motion"
 import colors from "tailwindcss/colors"
 import { CheckIcon } from "lucide-react"
-import SheetHeader from "../../sheet-header"
+import { DialogHeader } from "@/common/ui/dialog"
 
 export default function DisplaySuccess({
   invoice,
@@ -22,7 +22,7 @@ export default function DisplaySuccess({
 
   return (
     <MotionSlideIn className="flex flex-col gap-4">
-      <SheetHeader title="Lightning Invoice" />
+      <DialogHeader title="Lightning Invoice" />
 
       <Flex center>
         <SuccessContainer

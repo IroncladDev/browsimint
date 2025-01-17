@@ -58,7 +58,6 @@ export default function ReceiveLN() {
           <ArrowDown className="w-5 h-5" />
         </Button>
       </SheetTrigger>
-
       <SheetContent>
         <Flex col gap={4} asChild>
           <MotionAnimatedHeight>

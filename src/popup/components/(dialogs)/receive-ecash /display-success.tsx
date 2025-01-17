@@ -1,5 +1,4 @@
 import { MotionSlideIn } from "@/common/ui/motion"
-import { decodeInvoice } from "@/common/utils"
 import Button from "@common/ui/button"
 import Flex from "@common/ui/flex"
 import { SheetClose } from "@common/ui/sheet"
@@ -8,20 +7,18 @@ import { styled } from "react-tailwind-variants"
 import { motion } from "framer-motion"
 import colors from "tailwindcss/colors"
 import { CheckIcon } from "lucide-react"
-import SheetHeader from "../../sheet-header"
+import { DialogHeader } from "@/common/ui/dialog"
 
 export default function DisplaySuccess({
-  invoice,
+  msats,
   onReset,
 }: {
-  invoice: string
+  msats: number
   onReset: () => void
 }) {
-  const decoded = decodeInvoice(invoice)
-
   return (
     <MotionSlideIn className="flex flex-col gap-4">
-      <SheetHeader title="Lightning Invoice" />
+      <DialogHeader title="Lightning Invoice" />
 
       <Flex center>
         <SuccessContainer
@@ -32,7 +29,7 @@ export default function DisplaySuccess({
           <Flex col center gap={2}>
             <CheckIcon className="w-5 h-5 opacity-0" />
             <Text size="xl" weight="medium">
-              You sent {decoded.satoshis} sats
+              You received {Math.floor(msats / 1000)} sats
             </Text>
             <CheckIcon className="w-5 h-5" />
           </Flex>
@@ -40,7 +37,7 @@ export default function DisplaySuccess({
       </Flex>
 
       <Flex col gap={2}>
-        <Button onClick={onReset}>Send another payment</Button>
+        <Button onClick={onReset}>Receive another payment</Button>
         <SheetClose asChild>
           <Button variant="secondary" size="small">
             Done

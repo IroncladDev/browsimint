@@ -1,12 +1,12 @@
 import { MotionSlideIn } from "@/common/ui/motion"
 import { Dispatch, SetStateAction, useCallback, useState } from "react"
-import SheetHeader from "../../sheet-header"
 import Flex from "@/common/ui/flex"
 import Text from "@/common/ui/text"
 import Input from "@/common/ui/input"
 import Button from "@/common/ui/button"
 import { makeInternalCall } from "@/popup/messaging"
 import { OutgoingLightningPayment } from "@fedimint/core-web"
+import { DialogHeader } from "@/common/ui/dialog"
 
 export default function InputInvoice({
   onPaid,
@@ -43,7 +43,7 @@ export default function InputInvoice({
 
   return (
     <MotionSlideIn className="flex flex-col gap-4">
-      <SheetHeader title="Request Lightning Payment" />
+      <DialogHeader title="Request Lightning Payment" />
       <Flex col gap={1} width="full" grow>
         <Text>Recipient</Text>
         <Input

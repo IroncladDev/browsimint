@@ -1,37 +1,30 @@
-
+import { DialogHeader } from "@/common/ui/dialog"
 import { MotionSlideIn } from "@/common/ui/motion"
 import { QrCode } from "@/common/ui/qr"
 import Button from "@common/ui/button"
-import Flex from "@common/ui/flex"
-import Text from "@common/ui/text"
 import { useToast } from "@common/ui/use-toast"
-import { CreateBolt11Response } from "@fedimint/core-web"
-import { Loader2Icon } from "lucide-react"
+import { MintSpendNotesResponse } from "@fedimint/core-web"
 import { styled } from "react-tailwind-variants"
-import SheetHeader from "../../sheet-header"
 
-export default function DisplayInvoice({ invoice }: { invoice: CreateBolt11Response }) {
+export default function DisplayNotes({ notes, onComplete }: { notes: MintSpendNotesResponse, onComplete: () => void }) {
   const { toast } = useToast()
 
   return (
     <MotionSlideIn className="flex flex-col gap-4">
-      <SheetHeader title="Lightning Invoice" />
+      <DialogHeader title="Ecash Notes" />
       <QRContainer>
-        <QrCode value={invoice.invoice} />
+        <QrCode value={notes.notes} />
       </QRContainer>
-      <Flex gap={2} center>
-        <Text>Waiting for payment</Text>
-        <Loader2Icon className="w-5 h-5 animate-spin" />
-      </Flex>
       <Button
         onClick={() =>
           navigator.clipboard
-            .writeText(invoice.invoice)
+            .writeText(notes.notes)
             .then(() => toast({ title: "Invoice Copied to clipboard" }))
         }
       >
         Copy to Clipboard
       </Button>
+      <Button onClick={onComplete}>Done</Button>
     </MotionSlideIn>
   )
 }

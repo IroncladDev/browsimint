@@ -32,7 +32,6 @@ export default function SendLN() {
           <ArrowUp className="w-5 h-5" />
         </Button>
       </SheetTrigger>
-
       <SheetContent>
         <Flex col gap={4} asChild>
           <MotionAnimatedHeight>

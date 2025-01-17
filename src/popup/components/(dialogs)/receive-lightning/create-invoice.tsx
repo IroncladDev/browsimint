@@ -1,3 +1,4 @@
+import { DialogHeader } from "@/common/ui/dialog"
 import { MotionSlideIn } from "@/common/ui/motion"
 import { makeInternalCall } from "@/popup/messaging"
 import Button from "@common/ui/button"
@@ -6,7 +7,6 @@ import Input from "@common/ui/input"
 import Text from "@common/ui/text"
 import { CreateBolt11Response } from "@fedimint/core-web"
 import { Dispatch, SetStateAction, useState } from "react"
-import SheetHeader from "../../sheet-header"
 
 export default function CreateInvoice({
   onInvoice,
@@ -27,7 +27,7 @@ export default function CreateInvoice({
       params: {
         amount: amount * 1000,
         description,
-        expiryTime: 6,
+        expiryTime: 60 * 24,
       },
     })
 
@@ -40,8 +40,8 @@ export default function CreateInvoice({
   }
 
   return (
-    <MotionSlideIn className="flex flex-col gap-4">
-      <SheetHeader title="Request Lightning Payment" />
+    <MotionSlideIn className="flex flex-col gap-4 animate-height">
+      <DialogHeader title="Request Lightning Payment" />
       <Flex col gap={1} width="full" grow>
         <Text>Amount (sats)</Text>
         <Input

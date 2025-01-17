@@ -39,8 +39,8 @@ export default async function handleWeblnMessage(
         params.amount,
         params.description,
         params.expiryTime,
-        params.extraMeta,
         params.gatewayInfo,
+        params.extraMeta,
       )
 
       return { paymentRequest: invoice }

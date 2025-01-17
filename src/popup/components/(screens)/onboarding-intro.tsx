@@ -9,7 +9,7 @@ import {
 } from "framer-motion"
 import { useEffect } from "react"
 import colors from "tailwindcss/colors"
-import { useAppState } from "../state"
+import { useAppState } from "../app-state-provider"
 
 export default function IntroOnboarding() {
   const state = useAppState()

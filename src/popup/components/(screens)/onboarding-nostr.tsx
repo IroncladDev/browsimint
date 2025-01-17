@@ -11,7 +11,7 @@ import {
 } from "framer-motion"
 import { useEffect, useState } from "react"
 import colors from "tailwindcss/colors"
-import { useAppState } from "../state"
+import { useAppState } from "../app-state-provider"
 
 export default function NostrOnboarding() {
   const [nsec, setNsec] = useState("")
